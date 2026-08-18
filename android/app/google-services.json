@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "307773262208",
+    "project_id": "edutech-smk-app-99a83",
+    "storage_bucket": "edutech-smk-app-99a83.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:307773262208:android:e4cf0d40281ddde26a9965",
+        "android_client_info": {
+          "package_name": "com.edutechsmk.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApVR94kAyNKxqlZqV6s0L88HvYoIPdn_I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

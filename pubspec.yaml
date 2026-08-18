@@ -1,0 +1,54 @@
+name: edutech_smk
+description: EduTech SMK - Mobile Learning Management System
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Firebase
+  firebase_core: ^2.27.0
+  firebase_auth: ^4.17.8
+  cloud_firestore: ^4.15.8
+  firebase_storage: ^11.6.9
+  firebase_messaging: ^14.7.19
+
+  # State Management
+  provider: ^6.1.2
+
+  # Navigation
+  go_router: ^13.2.1
+
+  # UI
+  cached_network_image: ^3.3.1
+
+  # File handling
+  path_provider: ^2.1.2
+
+  # QR Code
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^3.5.6
+
+  # Utilities
+  intl: ^0.18.1
+  uuid: ^4.3.3
+  path: ^1.9.0
+
+  # Local notifications
+  flutter_local_notifications: ^17.0.0
+
+  cupertino_icons: ^1.0.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
