@@ -9,9 +9,19 @@ import 'core/router/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+
+  FlutterError.onError = (details) {
+    debugPrint('Flutter error: ${details.exception}');
+  };
+
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    debugPrint('Firebase init error: $e');
+  }
+
   // FCM runs in background — don't block startup if it fails on web
   FCMService.initialize().catchError((e) => debugPrint('FCM init: $e'));
   runApp(const EduTechApp());
