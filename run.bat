@@ -7,6 +7,9 @@ echo    EduTech SMK - Learning Management System
 echo  ================================================
 echo.
 
+:: Matikan server lama di port 8080 jika ada
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr ":8080" 2^>nul') do taskkill /F /PID %%a >nul 2>&1
+
 :: Buat virtual drive tanpa spasi untuk Flutter SDK
 subst X: "C:\Users\ACER ID\Downloads\flutter" >nul 2>&1
 
@@ -37,9 +40,10 @@ echo.
 echo  Tekan Ctrl+C untuk menghentikan server.
 echo.
 
-:: Buka browser otomatis
-start "" "http://localhost:8080"
+:: Tunggu 3 detik lalu buka browser (server butuh waktu start)
+start "" cmd /c "timeout /t 3 /nobreak >nul & start http://localhost:8080"
 
 npx serve build\web --listen 8080 --single
 
 pause
+
