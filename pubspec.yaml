@@ -32,6 +32,9 @@ dependencies:
   # QR Code
   qr_flutter: ^4.1.0
 
+  # URL launcher
+  url_launcher: ^6.2.6
+
   # Utilities
   intl: ^0.18.1
   uuid: ^4.3.3

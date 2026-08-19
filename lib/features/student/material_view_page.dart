@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/providers/auth_provider.dart';
 import '../../core/services/firestore_service.dart';
 import '../../core/models/material_model.dart';
+import '../../core/theme/app_theme.dart';
 
 class MaterialViewPage extends StatelessWidget {
   const MaterialViewPage({super.key});
@@ -99,11 +101,21 @@ class MaterialViewPage extends StatelessWidget {
           ElevatedButton.icon(
             icon: const Icon(Icons.open_in_new),
             label: const Text('Buka File'),
-            onPressed: () {
+            onPressed: () async {
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Membuka: ${m.fileUrl}')),
-              );
+              final uri = Uri.tryParse(m.fileUrl);
+              if (uri != null && await canLaunchUrl(uri)) {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              } else {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Tidak dapat membuka file'),
+                      backgroundColor: AppTheme.errorColor,
+                    ),
+                  );
+                }
+              }
             },
           ),
         ],

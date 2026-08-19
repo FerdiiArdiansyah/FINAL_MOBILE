@@ -180,12 +180,13 @@ class ViolationPage extends StatelessWidget {
               onPressed: () async {
                 if (descCtrl.text.isEmpty) return;
                 final db = FirestoreService();
+                final student = await db.getUser(studentId);
                 await db.addViolation(
                   ViolationModel(
                     id: '',
                     studentId: studentId,
-                    studentName: '',
-                    classId: '',
+                    studentName: student?.name ?? '',
+                    classId: student?.classId ?? '',
                     description: descCtrl.text,
                     points: int.tryParse(pointsCtrl.text) ?? 5,
                     category: selectedCategory,

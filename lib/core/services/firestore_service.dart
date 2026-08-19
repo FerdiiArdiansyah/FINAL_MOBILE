@@ -30,6 +30,15 @@ class FirestoreService {
     return snapshot.docs.map((d) => UserModel.fromMap(d.data(), d.id)).toList();
   }
 
+  Future<UserModel?> getUser(String uid) async {
+    final doc = await _db
+        .collection(FirebaseConstants.usersCollection)
+        .doc(uid)
+        .get();
+    if (!doc.exists) return null;
+    return UserModel.fromMap(doc.data()!, doc.id);
+  }
+
   Future<void> updateUser(String uid, Map<String, dynamic> data) async {
     await _db
         .collection(FirebaseConstants.usersCollection)

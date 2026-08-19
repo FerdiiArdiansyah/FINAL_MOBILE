@@ -143,7 +143,18 @@ class _StudentMonitorCard extends StatelessWidget {
                                 horizontal: 12, vertical: 6),
                             textStyle: const TextStyle(fontSize: 12),
                           ),
-                          onPressed: () {},
+                          onPressed: () async {
+                            final wali = context.read<AuthProvider>().userModel!;
+                            final db = FirestoreService();
+                            final room = await db.getOrCreateChatRoom(
+                              wali.uid,
+                              student.uid,
+                              {wali.uid: wali.name, student.uid: student.name},
+                            );
+                            if (context.mounted) {
+                              context.push('/chat/\${room.id}');
+                            }
+                          },
                         ),
                       ],
                     ),
