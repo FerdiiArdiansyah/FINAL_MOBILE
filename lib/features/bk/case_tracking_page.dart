@@ -17,7 +17,14 @@ class _CaseTrackingPageState extends State<CaseTrackingPage> {
   String _selectedCategory = 'all';
 
   final _statuses = ['all', 'pending', 'scheduled', 'ongoing', 'resolved'];
-  final _categories = ['all', 'Akademik', 'Sosial', 'Pribadi', 'Karir', 'Pelanggaran'];
+  final _categories = [
+    'all',
+    'Akademik',
+    'Sosial',
+    'Pribadi',
+    'Karir',
+    'Pelanggaran'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -34,17 +41,18 @@ class _CaseTrackingPageState extends State<CaseTrackingPage> {
             child: Row(
               children: [
                 const Text('Status: ',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12)),
+                    style:
+                        TextStyle(fontWeight: FontWeight.w600, fontSize: 12)),
                 ..._statuses.map((s) => Padding(
-                  padding: const EdgeInsets.only(right: 4),
-                  child: FilterChip(
-                    label: Text(s == 'all' ? 'Semua' : _statusLabel(s),
-                        style: const TextStyle(fontSize: 12)),
-                    selected: _selectedStatus == s,
-                    selectedColor: _statusColor(s).withOpacity(0.2),
-                    onSelected: (_) => setState(() => _selectedStatus = s),
-                  ),
-                )),
+                      padding: const EdgeInsets.only(right: 4),
+                      child: FilterChip(
+                        label: Text(s == 'all' ? 'Semua' : _statusLabel(s),
+                            style: const TextStyle(fontSize: 12)),
+                        selected: _selectedStatus == s,
+                        selectedColor: _statusColor(s).withOpacity(0.2),
+                        onSelected: (_) => setState(() => _selectedStatus = s),
+                      ),
+                    )),
               ],
             ),
           ),
@@ -55,16 +63,18 @@ class _CaseTrackingPageState extends State<CaseTrackingPage> {
             child: Row(
               children: [
                 const Text('Kategori: ',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12)),
+                    style:
+                        TextStyle(fontWeight: FontWeight.w600, fontSize: 12)),
                 ..._categories.map((c) => Padding(
-                  padding: const EdgeInsets.only(right: 4),
-                  child: FilterChip(
-                    label: Text(c == 'all' ? 'Semua' : c,
-                        style: const TextStyle(fontSize: 12)),
-                    selected: _selectedCategory == c,
-                    onSelected: (_) => setState(() => _selectedCategory = c),
-                  ),
-                )),
+                      padding: const EdgeInsets.only(right: 4),
+                      child: FilterChip(
+                        label: Text(c == 'all' ? 'Semua' : c,
+                            style: const TextStyle(fontSize: 12)),
+                        selected: _selectedCategory == c,
+                        onSelected: (_) =>
+                            setState(() => _selectedCategory = c),
+                      ),
+                    )),
               ],
             ),
           ),
@@ -119,11 +129,16 @@ class _CaseTrackingPageState extends State<CaseTrackingPage> {
 
   Color _statusColor(String s) {
     switch (s) {
-      case 'pending': return AppTheme.warningColor;
-      case 'scheduled': return AppTheme.secondaryColor;
-      case 'ongoing': return Colors.purple;
-      case 'resolved': return AppTheme.successColor;
-      default: return Colors.grey;
+      case 'pending':
+        return AppTheme.warningColor;
+      case 'scheduled':
+        return AppTheme.secondaryColor;
+      case 'ongoing':
+        return Colors.purple;
+      case 'resolved':
+        return AppTheme.successColor;
+      default:
+        return Colors.grey;
     }
   }
 }
@@ -158,8 +173,7 @@ class _CaseCard extends StatelessWidget {
                 Chip(
                   label: Text(
                     counseling.status,
-                    style: const TextStyle(
-                        color: Colors.white, fontSize: 11),
+                    style: const TextStyle(color: Colors.white, fontSize: 11),
                   ),
                   backgroundColor: statusColor,
                   padding: EdgeInsets.zero,
@@ -173,8 +187,7 @@ class _CaseCard extends StatelessWidget {
                 Chip(
                   label: Text(counseling.category,
                       style: const TextStyle(fontSize: 11)),
-                  backgroundColor:
-                      AppTheme.accentColor.withValues(alpha: 0.2),
+                  backgroundColor: AppTheme.accentColor.withValues(alpha: 0.2),
                   padding: EdgeInsets.zero,
                 ),
                 if (counseling.scheduledAt != null)
@@ -183,8 +196,7 @@ class _CaseCard extends StatelessWidget {
                       'Jadwal: ${_fmt(counseling.scheduledAt!)}',
                       style: const TextStyle(fontSize: 11),
                     ),
-                    backgroundColor:
-                        Colors.green.withValues(alpha: 0.2),
+                    backgroundColor: Colors.green.withValues(alpha: 0.2),
                     padding: EdgeInsets.zero,
                   ),
               ],
@@ -194,23 +206,21 @@ class _CaseCard extends StatelessWidget {
               counseling.description,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style:
-                  const TextStyle(fontSize: 13, color: Colors.grey),
+              style: const TextStyle(fontSize: 13, color: Colors.grey),
             ),
             if (counseling.notes != null) ...[
               const SizedBox(height: 4),
               Text(
                 'Catatan: ${counseling.notes}',
-                style:
-                    const TextStyle(fontSize: 12, color: Colors.blueGrey),
+                style: const TextStyle(fontSize: 12, color: Colors.blueGrey),
               ),
             ],
             if (counseling.resolution != null) ...[
               const SizedBox(height: 4),
               Text(
                 'Resolusi: ${counseling.resolution}',
-                style: const TextStyle(
-                    fontSize: 12, color: AppTheme.successColor),
+                style:
+                    const TextStyle(fontSize: 12, color: AppTheme.successColor),
               ),
             ],
             if (counseling.status != 'resolved') ...[
@@ -228,14 +238,12 @@ class _CaseCard extends StatelessWidget {
                     }),
                   if (counseling.status == 'scheduled')
                     _ActionBtn('Mulai Sesi', Colors.purple, () async {
-                      await db.updateCounselingStatus(
-                          counseling.id, 'ongoing',
+                      await db.updateCounselingStatus(counseling.id, 'ongoing',
                           notes: 'Sesi dimulai oleh ${bk.name}');
                     }),
                   if (counseling.status == 'ongoing')
                     _ActionBtn('Selesai', AppTheme.successColor, () async {
-                      await db.updateCounselingStatus(
-                          counseling.id, 'resolved',
+                      await db.updateCounselingStatus(counseling.id, 'resolved',
                           resolution: 'Diselesaikan oleh ${bk.name}');
                     }),
                 ],
@@ -249,11 +257,16 @@ class _CaseCard extends StatelessWidget {
 
   Color _statusColor(String status) {
     switch (status) {
-      case 'pending': return AppTheme.warningColor;
-      case 'scheduled': return AppTheme.secondaryColor;
-      case 'ongoing': return Colors.purple;
-      case 'resolved': return AppTheme.successColor;
-      default: return Colors.grey;
+      case 'pending':
+        return AppTheme.warningColor;
+      case 'scheduled':
+        return AppTheme.secondaryColor;
+      case 'ongoing':
+        return Colors.purple;
+      case 'resolved':
+        return AppTheme.successColor;
+      default:
+        return Colors.grey;
     }
   }
 

@@ -59,8 +59,7 @@ class MaterialViewPage extends StatelessWidget {
                     ),
                   ),
                   title: Text(m.title,
-                      style:
-                          const TextStyle(fontWeight: FontWeight.w600)),
+                      style: const TextStyle(fontWeight: FontWeight.w600)),
                   subtitle: Text(
                     '${m.subject} • ${m.teacherName}\n'
                     '${_formatDate(m.createdAt)}',
@@ -123,6 +122,5 @@ class MaterialViewPage extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime date) =>
-      '${date.day}/${date.month}/${date.year}';
+  String _formatDate(DateTime date) => '${date.day}/${date.month}/${date.year}';
 }

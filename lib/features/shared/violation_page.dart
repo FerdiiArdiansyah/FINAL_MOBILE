@@ -26,8 +26,7 @@ class ViolationPage extends StatelessWidget {
       appBar: AppBar(title: const Text('Catatan Pelanggaran')),
       floatingActionButton: canAdd
           ? FloatingActionButton(
-              onPressed: () =>
-                  _showAddViolationDialog(context, user),
+              onPressed: () => _showAddViolationDialog(context, user),
               child: const Icon(Icons.add),
             )
           : null,
@@ -56,8 +55,7 @@ class ViolationPage extends StatelessWidget {
                   children: [
                     const Text(
                       'Total Poin Pelanggaran',
-                      style: TextStyle(
-                          color: Colors.white, fontSize: 16),
+                      style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
                     Text(
                       '$totalPoints / 100',
@@ -108,9 +106,8 @@ class ViolationPage extends StatelessWidget {
                         itemBuilder: (context, i) {
                           return _ViolationCard(
                             violation: violations[i],
-                            canVerify:
-                                user.role == AppRoles.guruBk ||
-                                    user.role == AppRoles.admin,
+                            canVerify: user.role == AppRoles.guruBk ||
+                                user.role == AppRoles.admin,
                           );
                         },
                       ),
@@ -136,13 +133,11 @@ class ViolationPage extends StatelessWidget {
             children: [
               DropdownButtonFormField<String>(
                 initialValue: selectedCategory,
-                decoration:
-                    const InputDecoration(labelText: 'Kategori'),
+                decoration: const InputDecoration(labelText: 'Kategori'),
                 items: ['ringan', 'sedang', 'berat']
                     .map((c) => DropdownMenuItem(
                           value: c,
-                          child: Text(c[0].toUpperCase() +
-                              c.substring(1)),
+                          child: Text(c[0].toUpperCase() + c.substring(1)),
                         ))
                     .toList(),
                 onChanged: (v) {
@@ -150,8 +145,10 @@ class ViolationPage extends StatelessWidget {
                     selectedCategory = v!;
                     if (v == 'ringan') {
                       pointsCtrl.text = '5';
-                    } else if (v == 'sedang') pointsCtrl.text = '15';
-                    else pointsCtrl.text = '30';
+                    } else if (v == 'sedang')
+                      pointsCtrl.text = '15';
+                    else
+                      pointsCtrl.text = '30';
                   });
                 },
               ),
@@ -159,15 +156,14 @@ class ViolationPage extends StatelessWidget {
               TextFormField(
                 controller: pointsCtrl,
                 keyboardType: TextInputType.number,
-                decoration:
-                    const InputDecoration(labelText: 'Poin'),
+                decoration: const InputDecoration(labelText: 'Poin'),
               ),
               const SizedBox(height: 8),
               TextFormField(
                 controller: descCtrl,
                 maxLines: 2,
-                decoration: const InputDecoration(
-                    labelText: 'Deskripsi Pelanggaran'),
+                decoration:
+                    const InputDecoration(labelText: 'Deskripsi Pelanggaran'),
               ),
             ],
           ),
@@ -229,9 +225,14 @@ class _ViolationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Color categoryColor;
     switch (violation.category) {
-      case 'berat': categoryColor = AppTheme.errorColor; break;
-      case 'sedang': categoryColor = AppTheme.warningColor; break;
-      default: categoryColor = Colors.orange;
+      case 'berat':
+        categoryColor = AppTheme.errorColor;
+        break;
+      case 'sedang':
+        categoryColor = AppTheme.warningColor;
+        break;
+      default:
+        categoryColor = Colors.orange;
     }
 
     return Card(
@@ -244,8 +245,8 @@ class _ViolationCard extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: categoryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -262,13 +263,11 @@ class _ViolationCard extends StatelessWidget {
                 Chip(
                   label: Text(
                     violation.status,
-                    style: const TextStyle(
-                        color: Colors.white, fontSize: 10),
+                    style: const TextStyle(color: Colors.white, fontSize: 10),
                   ),
-                  backgroundColor:
-                      violation.status == 'verified'
-                          ? AppTheme.successColor
-                          : AppTheme.warningColor,
+                  backgroundColor: violation.status == 'verified'
+                      ? AppTheme.successColor
+                      : AppTheme.warningColor,
                   padding: EdgeInsets.zero,
                 ),
               ],
@@ -280,11 +279,9 @@ class _ViolationCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Dilaporkan: ${violation.reportedByName}',
-                    style: const TextStyle(
-                        fontSize: 11, color: Colors.grey)),
+                    style: const TextStyle(fontSize: 11, color: Colors.grey)),
                 Text(_fmt(violation.date),
-                    style: const TextStyle(
-                        fontSize: 11, color: Colors.grey)),
+                    style: const TextStyle(fontSize: 11, color: Colors.grey)),
               ],
             ),
             if (canVerify && violation.status == 'pending') ...[
@@ -293,8 +290,8 @@ class _ViolationCard extends StatelessWidget {
                 icon: const Icon(Icons.verified, size: 16),
                 label: const Text('Verifikasi'),
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   textStyle: const TextStyle(fontSize: 12),
                 ),
                 onPressed: () async {

@@ -72,14 +72,11 @@ class _StudentMonitorCard extends StatelessWidget {
               stream: db.getAttendanceByStudent(student.uid),
               builder: (context, snap) {
                 final list = snap.data ?? [];
-                final hadir =
-                    list.where((a) => a.status == 'hadir').length;
-                final alpha =
-                    list.where((a) => a.status == 'alpha').length;
+                final hadir = list.where((a) => a.status == 'hadir').length;
+                final alpha = list.where((a) => a.status == 'alpha').length;
                 final total = list.length;
-                final persen = total > 0
-                    ? (hadir / total * 100).toStringAsFixed(1)
-                    : '0';
+                final persen =
+                    total > 0 ? (hadir / total * 100).toStringAsFixed(1) : '0';
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -90,8 +87,12 @@ class _StudentMonitorCard extends StatelessWidget {
                             'Hadir', hadir.toString(), AppTheme.successColor),
                         _InfoChip(
                             'Alpha', alpha.toString(), AppTheme.errorColor),
-                        _InfoChip('Total Hadir', '$persen%',
-                            alpha > 3 ? AppTheme.warningColor : AppTheme.successColor),
+                        _InfoChip(
+                            'Total Hadir',
+                            '$persen%',
+                            alpha > 3
+                                ? AppTheme.warningColor
+                                : AppTheme.successColor),
                       ],
                     ),
                     if (alpha > 3) ...[
@@ -131,8 +132,8 @@ class _StudentMonitorCard extends StatelessWidget {
                                 horizontal: 12, vertical: 6),
                             textStyle: const TextStyle(fontSize: 12),
                           ),
-                          onPressed: () => context
-                              .push('/violations/${student.uid}'),
+                          onPressed: () =>
+                              context.push('/violations/${student.uid}'),
                         ),
                         const SizedBox(width: 8),
                         ElevatedButton.icon(
@@ -144,7 +145,8 @@ class _StudentMonitorCard extends StatelessWidget {
                             textStyle: const TextStyle(fontSize: 12),
                           ),
                           onPressed: () async {
-                            final wali = context.read<AuthProvider>().userModel!;
+                            final wali =
+                                context.read<AuthProvider>().userModel!;
                             final db = FirestoreService();
                             final room = await db.getOrCreateChatRoom(
                               wali.uid,

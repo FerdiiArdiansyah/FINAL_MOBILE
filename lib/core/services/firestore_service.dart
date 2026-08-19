@@ -31,10 +31,8 @@ class FirestoreService {
   }
 
   Future<UserModel?> getUser(String uid) async {
-    final doc = await _db
-        .collection(FirebaseConstants.usersCollection)
-        .doc(uid)
-        .get();
+    final doc =
+        await _db.collection(FirebaseConstants.usersCollection).doc(uid).get();
     if (!doc.exists) return null;
     return UserModel.fromMap(doc.data()!, doc.id);
   }
@@ -53,8 +51,11 @@ class FirestoreService {
         _db.collection(FirebaseConstants.materialsCollection);
     if (classId != null) query = query.where('classId', isEqualTo: classId);
     if (subject != null) query = query.where('subject', isEqualTo: subject);
-    return query.orderBy('createdAt', descending: true).snapshots().map((s) =>
-        s.docs.map((d) => MaterialModel.fromMap(d.data(), d.id)).toList());
+    return query.snapshots().map((s) {
+      final list = s.docs.map((d) => MaterialModel.fromMap(d.data(), d.id)).toList();
+      list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return list;
+    });
   }
 
   Future<String> addMaterial(MaterialModel material) async {
@@ -83,8 +84,11 @@ class FirestoreService {
     if (teacherId != null) {
       query = query.where('teacherId', isEqualTo: teacherId);
     }
-    return query.orderBy('createdAt', descending: true).snapshots().map((s) =>
-        s.docs.map((d) => AssignmentModel.fromMap(d.data(), d.id)).toList());
+    return query.snapshots().map((s) {
+      final list = s.docs.map((d) => AssignmentModel.fromMap(d.data(), d.id)).toList();
+      list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return list;
+    });
   }
 
   Future<String> addAssignment(AssignmentModel assignment) async {
@@ -170,8 +174,11 @@ class FirestoreService {
     if (to != null) {
       query = query.where('date', isLessThanOrEqualTo: Timestamp.fromDate(to));
     }
-    return query.orderBy('date', descending: true).snapshots().map((s) =>
-        s.docs.map((d) => AttendanceModel.fromMap(d.data(), d.id)).toList());
+    return query.snapshots().map((s) {
+      final list = s.docs.map((d) => AttendanceModel.fromMap(d.data(), d.id)).toList();
+      list.sort((a, b) => b.date.compareTo(a.date));
+      return list;
+    });
   }
 
   Stream<List<AttendanceModel>> getAttendanceByClass(
@@ -195,20 +202,24 @@ class FirestoreService {
     return _db
         .collection(FirebaseConstants.pelanggaranCollection)
         .where('studentId', isEqualTo: studentId)
-        .orderBy('date', descending: true)
         .snapshots()
-        .map((s) =>
-            s.docs.map((d) => ViolationModel.fromMap(d.data(), d.id)).toList());
+        .map((s) {
+          final list = s.docs.map((d) => ViolationModel.fromMap(d.data(), d.id)).toList();
+          list.sort((a, b) => b.date.compareTo(a.date));
+          return list;
+        });
   }
 
   Stream<List<ViolationModel>> getViolationsByClass(String classId) {
     return _db
         .collection(FirebaseConstants.pelanggaranCollection)
         .where('classId', isEqualTo: classId)
-        .orderBy('date', descending: true)
         .snapshots()
-        .map((s) =>
-            s.docs.map((d) => ViolationModel.fromMap(d.data(), d.id)).toList());
+        .map((s) {
+          final list = s.docs.map((d) => ViolationModel.fromMap(d.data(), d.id)).toList();
+          list.sort((a, b) => b.date.compareTo(a.date));
+          return list;
+        });
   }
 
   Future<String> addViolation(ViolationModel violation) async {
@@ -228,12 +239,14 @@ class FirestoreService {
 
   // Admin: lihat semua pelanggaran lintas kelas
   Stream<List<ViolationModel>> getAllViolations({String? status}) {
-    Query<Map<String, dynamic>> query = _db
-        .collection(FirebaseConstants.pelanggaranCollection)
-        .orderBy('date', descending: true);
+    Query<Map<String, dynamic>> query =
+        _db.collection(FirebaseConstants.pelanggaranCollection);
     if (status != null) query = query.where('status', isEqualTo: status);
-    return query.snapshots().map((s) =>
-        s.docs.map((d) => ViolationModel.fromMap(d.data(), d.id)).toList());
+    return query.snapshots().map((s) {
+      final list = s.docs.map((d) => ViolationModel.fromMap(d.data(), d.id)).toList();
+      list.sort((a, b) => b.date.compareTo(a.date));
+      return list;
+    });
   }
 
   Future<void> deleteViolation(String id) async {
@@ -257,8 +270,11 @@ class FirestoreService {
     }
     if (bkId != null) query = query.where('bkId', isEqualTo: bkId);
     if (status != null) query = query.where('status', isEqualTo: status);
-    return query.orderBy('createdAt', descending: true).snapshots().map((s) =>
-        s.docs.map((d) => CounselingModel.fromMap(d.data(), d.id)).toList());
+    return query.snapshots().map((s) {
+      final list = s.docs.map((d) => CounselingModel.fromMap(d.data(), d.id)).toList();
+      list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return list;
+    });
   }
 
   Future<String> addCounseling(CounselingModel counseling) async {
@@ -287,10 +303,16 @@ class FirestoreService {
     return _db
         .collection(FirebaseConstants.chatRoomsCollection)
         .where('participants', arrayContains: userId)
-        .orderBy('lastMessageAt', descending: true)
         .snapshots()
-        .map((s) =>
-            s.docs.map((d) => ChatRoomModel.fromMap(d.data(), d.id)).toList());
+        .map((s) {
+          final list = s.docs.map((d) => ChatRoomModel.fromMap(d.data(), d.id)).toList();
+          list.sort((a, b) {
+            final aTime = a.lastMessageAt ?? DateTime(2000);
+            final bTime = b.lastMessageAt ?? DateTime(2000);
+            return bTime.compareTo(aTime);
+          });
+          return list;
+        });
   }
 
   Future<ChatRoomModel> getOrCreateChatRoom(
@@ -394,12 +416,13 @@ class FirestoreService {
     return _db
         .collection(FirebaseConstants.notificationsCollection)
         .where('targetUserId', whereIn: [userId, 'ALL'])
-        .orderBy('createdAt', descending: true)
         .limit(50)
         .snapshots()
-        .map((s) => s.docs
-            .map((d) => NotificationModel.fromMap(d.data(), d.id))
-            .toList());
+        .map((s) {
+          final list = s.docs.map((d) => NotificationModel.fromMap(d.data(), d.id)).toList();
+          list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+          return list;
+        });
   }
 
   Future<void> addNotification(NotificationModel notification) async {
@@ -419,11 +442,17 @@ class FirestoreService {
 
   Stream<List<Map<String, dynamic>>> getForumPosts({String? subjectId}) {
     Query<Map<String, dynamic>> q =
-        _db.collection('forumPosts').orderBy('createdAt', descending: true);
+        _db.collection('forumPosts');
     if (subjectId != null) q = q.where('subjectId', isEqualTo: subjectId);
-    return q
-        .snapshots()
-        .map((s) => s.docs.map((d) => {'id': d.id, ...d.data()}).toList());
+    return q.snapshots().map((s) {
+      final list = s.docs.map((d) => {'id': d.id, ...d.data()}).toList();
+      list.sort((a, b) {
+        final aT = (a['createdAt'] as Timestamp?)?.toDate() ?? DateTime(2000);
+        final bT = (b['createdAt'] as Timestamp?)?.toDate() ?? DateTime(2000);
+        return bT.compareTo(aT);
+      });
+      return list;
+    });
   }
 
   Future<String> addForumPost(Map<String, dynamic> post) async {

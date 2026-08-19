@@ -48,8 +48,7 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
     final authProvider = context.read<AuthProvider>();
-    final success =
-        await authProvider.resetPassword(_emailController.text);
+    final success = await authProvider.resetPassword(_emailController.text);
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -72,7 +71,11 @@ class _LoginPageState extends State<LoginPage> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF0D1B6E), AppTheme.primaryColor, Color(0xFF1565C0)],
+            colors: [
+              Color(0xFF0D1B6E),
+              AppTheme.primaryColor,
+              Color(0xFF1565C0)
+            ],
           ),
         ),
         child: SafeArea(
@@ -147,8 +150,8 @@ class _LoginPageState extends State<LoginPage> {
                               const SizedBox(height: 4),
                               const Text(
                                 'Silakan masukkan email dan password Anda',
-                                style: TextStyle(
-                                    fontSize: 13, color: Colors.grey),
+                                style:
+                                    TextStyle(fontSize: 13, color: Colors.grey),
                               ),
                               const SizedBox(height: 20),
                               TextFormField(
@@ -175,15 +178,13 @@ class _LoginPageState extends State<LoginPage> {
                                 obscureText: _obscurePassword,
                                 decoration: InputDecoration(
                                   labelText: 'Password',
-                                  prefixIcon:
-                                      const Icon(Icons.lock_outline),
+                                  prefixIcon: const Icon(Icons.lock_outline),
                                   suffixIcon: IconButton(
                                     icon: Icon(_obscurePassword
                                         ? Icons.visibility_off_outlined
                                         : Icons.visibility_outlined),
                                     onPressed: () => setState(() =>
-                                        _obscurePassword =
-                                            !_obscurePassword),
+                                        _obscurePassword = !_obscurePassword),
                                   ),
                                 ),
                                 validator: (v) {
@@ -212,11 +213,10 @@ class _LoginPageState extends State<LoginPage> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppTheme.primaryColor,
                                   foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 14),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 14),
                                   shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(12)),
+                                      borderRadius: BorderRadius.circular(12)),
                                   elevation: 0,
                                 ),
                                 child: authProvider.isLoading
@@ -247,17 +247,23 @@ class _LoginPageState extends State<LoginPage> {
                       spacing: 8,
                       runSpacing: 4,
                       children: [
-                        'Siswa', 'Guru Mapel', 'Wali Kelas',
-                        'Guru BK', 'Guru Piket', 'Admin',
-                      ].map((role) => Chip(
-                        label: Text(role,
-                            style: const TextStyle(
-                                fontSize: 11, color: Colors.white)),
-                        backgroundColor: Colors.white.withOpacity(0.15),
-                        padding: EdgeInsets.zero,
-                        materialTapTargetSize:
-                            MaterialTapTargetSize.shrinkWrap,
-                      )).toList(),
+                        'Siswa',
+                        'Guru Mapel',
+                        'Wali Kelas',
+                        'Guru BK',
+                        'Guru Piket',
+                        'Admin',
+                      ]
+                          .map((role) => Chip(
+                                label: Text(role,
+                                    style: const TextStyle(
+                                        fontSize: 11, color: Colors.white)),
+                                backgroundColor: Colors.white.withOpacity(0.15),
+                                padding: EdgeInsets.zero,
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                              ))
+                          .toList(),
                     ),
                     const SizedBox(height: 20),
                     const Text(
