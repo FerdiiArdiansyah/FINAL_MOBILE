@@ -7,6 +7,7 @@ import '../../core/services/firestore_service.dart';
 import '../../core/models/material_model.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/file_picker.dart';
+import '../../core/utils/cloudinary_uploader.dart';
 
 class UploadMaterialPage extends StatefulWidget {
   const UploadMaterialPage({super.key});
@@ -25,8 +26,8 @@ class _UploadMaterialPageState extends State<UploadMaterialPage> {
 
   String _selectedType = 'pdf';
   bool _loading = false;
-  // On web, CORS blocks direct Storage upload — default to URL mode
-  bool _useFileUpload = !kIsWeb;
+  // On web: use Cloudinary; on mobile: use Firebase Storage
+  bool _useFileUpload = true;
   PickedFile? _pickedFile;
   double _uploadProgress = 0;
 
@@ -54,6 +55,23 @@ class _UploadMaterialPageState extends State<UploadMaterialPage> {
         _pickedFile = file;
         _urlController.clear();
       });
+    }
+  }
+
+  Future<String> _uploadFile(PickedFile file) async {
+    if (kIsWeb) {
+      return uploadToCloudinary(
+        file.bytes,
+        file.name,
+        file.mimeType,
+        cloudName: 'jwphqjie',
+        uploadPreset: 'Nugrahn24 Preset',
+        onProgress: (p) {
+          if (mounted) setState(() => _uploadProgress = p);
+        },
+      );
+    } else {
+      return _uploadToStorage(file);
     }
   }
 
@@ -102,7 +120,7 @@ class _UploadMaterialPageState extends State<UploadMaterialPage> {
     try {
       String fileUrl;
       if (_useFileUpload && _pickedFile != null) {
-        fileUrl = await _uploadToStorage(_pickedFile!);
+        fileUrl = await _uploadFile(_pickedFile!);
       } else {
         fileUrl = _urlController.text.trim();
       }
@@ -201,52 +219,28 @@ class _UploadMaterialPageState extends State<UploadMaterialPage> {
 
               // Pilih file atau URL
               if (_selectedType != 'link') ...[
-                if (kIsWeb) ...[
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.amber.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.amber),
-                    ),
-                    child: const Row(
-                      children: [
-                        Icon(Icons.info_outline, color: Colors.amber, size: 16),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            'Upload file langsung tidak didukung di web. Gunakan URL (Google Drive, YouTube, dll).',
-                            style: TextStyle(fontSize: 12, color: Colors.amber),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                ] else ...[
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _ToggleBtn(
-                          label: 'Pilih dari Perangkat',
-                          icon: Icons.upload_file,
-                          selected: _useFileUpload,
-                          onTap: () => setState(() => _useFileUpload = true),
-                        ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _ToggleBtn(
+                        label: 'Pilih dari Perangkat',
+                        icon: Icons.upload_file,
+                        selected: _useFileUpload,
+                        onTap: () => setState(() => _useFileUpload = true),
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: _ToggleBtn(
-                          label: 'Input URL Manual',
-                          icon: Icons.link,
-                          selected: !_useFileUpload,
-                          onTap: () => setState(() => _useFileUpload = false),
-                        ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: _ToggleBtn(
+                        label: 'Input URL Manual',
+                        icon: Icons.link,
+                        selected: !_useFileUpload,
+                        onTap: () => setState(() => _useFileUpload = false),
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
               ],
 
               // File picker
