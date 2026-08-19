@@ -11,8 +11,7 @@ class AttendanceInputPage extends StatefulWidget {
   const AttendanceInputPage({super.key});
 
   @override
-  State<AttendanceInputPage> createState() =>
-      _AttendanceInputPageState();
+  State<AttendanceInputPage> createState() => _AttendanceInputPageState();
 }
 
 class _AttendanceInputPageState extends State<AttendanceInputPage> {
@@ -26,13 +25,10 @@ class _AttendanceInputPageState extends State<AttendanceInputPage> {
 
   Future<void> _loadStudents() async {
     final db = FirestoreService();
-    final students = await db
-        .getAllUsers()
-        .then((list) => list
-            .where((u) =>
-                u.role == 'SISWA' &&
-                u.classId == (_selectedClassId ?? ''))
-            .toList());
+    final students = await db.getAllUsers().then((list) => list
+        .where(
+            (u) => u.role == 'SISWA' && u.classId == (_selectedClassId ?? ''))
+        .toList());
     setState(() {
       _students = students;
       _loaded = true;
@@ -75,8 +71,8 @@ class _AttendanceInputPageState extends State<AttendanceInputPage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Gagal: $e'),
-              backgroundColor: AppTheme.errorColor),
+          SnackBar(
+              content: Text('Gagal: $e'), backgroundColor: AppTheme.errorColor),
         );
       }
     } finally {
@@ -100,8 +96,7 @@ class _AttendanceInputPageState extends State<AttendanceInputPage> {
                       child: CircularProgressIndicator(
                           color: Colors.white, strokeWidth: 2),
                     )
-                  : const Text('Simpan',
-                      style: TextStyle(color: Colors.white)),
+                  : const Text('Simpan', style: TextStyle(color: Colors.white)),
             ),
         ],
       ),
@@ -185,8 +180,8 @@ class _AttendanceInputPageState extends State<AttendanceInputPage> {
                             subtitle: Text('NISN: ${s.nisn ?? "-"}'),
                             trailing: _StatusSelector(
                               value: _statusMap[s.uid] ?? 'hadir',
-                              onChanged: (v) => setState(
-                                  () => _statusMap[s.uid] = v),
+                              onChanged: (v) =>
+                                  setState(() => _statusMap[s.uid] = v),
                             ),
                           );
                         },
@@ -223,8 +218,8 @@ class _StatusSelector extends StatelessWidget {
           .map((s) => DropdownMenuItem(
                 value: s,
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: colors[s]!.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),

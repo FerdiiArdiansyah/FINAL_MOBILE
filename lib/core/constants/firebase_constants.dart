@@ -15,6 +15,7 @@ class FirebaseConstants {
   static const String piketLogCollection = 'piketLog';
   static const String schedulesCollection = 'schedules';
   static const String notificationsCollection = 'notifications';
+  static const String classesCollection = 'classes';
 
   // Storage paths
   static const String materialsStoragePath = 'materials';

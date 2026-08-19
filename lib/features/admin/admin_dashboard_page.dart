@@ -37,6 +37,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
         index: _selectedTab,
         children: const [
           _UsersTab(),
+          _ClassesTab(),
           _ContentTab(),
           _ViolationsTab(),
           _StatsTab(),
@@ -52,9 +53,14 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
             label: 'Pengguna',
           ),
           NavigationDestination(
+            icon: Icon(Icons.class_outlined),
+            selectedIcon: Icon(Icons.class_),
+            label: 'Kelas',
+          ),
+          NavigationDestination(
             icon: Icon(Icons.library_books_outlined),
             selectedIcon: Icon(Icons.library_books),
-            label: 'Materi & Tugas',
+            label: 'Konten',
           ),
           NavigationDestination(
             icon: Icon(Icons.gavel_outlined),
@@ -821,6 +827,151 @@ class _ViolationAdminCard extends StatelessWidget {
   }
 
   String _fmt(DateTime d) => '${d.day}/${d.month}/${d.year}';
+}
+
+class _ClassesTab extends StatelessWidget {
+  const _ClassesTab();
+
+  @override
+  Widget build(BuildContext context) {
+    final db = FirestoreService();
+    return Scaffold(
+      body: StreamBuilder<List<Map<String, dynamic>>>(
+        stream: db.getClassesStream(),
+        builder: (context, snap) {
+          if (!snap.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          final classes = snap.data!;
+          if (classes.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.class_outlined,
+                      size: 64, color: Colors.grey),
+                  const SizedBox(height: 12),
+                  const Text('Belum ada kelas terdaftar',
+                      style: TextStyle(color: Colors.grey)),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.add),
+                    label: const Text('Tambah Kelas Pertama'),
+                    onPressed: () => _showAddClassDialog(context, db),
+                  ),
+                ],
+              ),
+            );
+          }
+          return ListView.builder(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
+            itemCount: classes.length,
+            itemBuilder: (context, i) {
+              final c = classes[i];
+              return Card(
+                margin: const EdgeInsets.only(bottom: 8),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: AppTheme.primaryColor,
+                    child: Text(
+                      c['classId'].toString().substring(0, 1),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  title: Text(c['classId'] as String,
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: Text(c['className'] as String? ?? ''),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete_outline, color: Colors.red),
+                    onPressed: () async {
+                      final ok = await showDialog<bool>(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          title: const Text('Hapus Kelas'),
+                          content: Text(
+                              'Hapus kelas "${c['classId']}"?\nData materi/tugas yang sudah dibuat untuk kelas ini tidak akan terhapus.'),
+                          actions: [
+                            TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                child: const Text('Batal')),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red),
+                              onPressed: () => Navigator.pop(context, true),
+                              child: const Text('Hapus'),
+                            ),
+                          ],
+                        ),
+                      );
+                      if (ok == true) await db.deleteClass(c['classId'] as String);
+                    },
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _showAddClassDialog(context, db),
+        icon: const Icon(Icons.add),
+        label: const Text('Tambah Kelas'),
+      ),
+    );
+  }
+
+  void _showAddClassDialog(BuildContext context, FirestoreService db) {
+    final idCtrl = TextEditingController();
+    final nameCtrl = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Tambah Kelas'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: idCtrl,
+              decoration: const InputDecoration(
+                labelText: 'ID Kelas *',
+                hintText: 'X-TKJ-1',
+                helperText: 'Gunakan format: Tingkat-Jurusan-No (tanpa spasi)',
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: nameCtrl,
+              decoration: const InputDecoration(
+                labelText: 'Nama Kelas *',
+                hintText: 'X TKJ 1',
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Batal')),
+          ElevatedButton(
+            onPressed: () async {
+              if (idCtrl.text.isEmpty || nameCtrl.text.isEmpty) return;
+              await db.addClass(idCtrl.text.trim(), nameCtrl.text.trim());
+              if (context.mounted) {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Kelas "${idCtrl.text}" berhasil ditambahkan'),
+                    backgroundColor: AppTheme.successColor,
+                  ),
+                );
+              }
+            },
+            child: const Text('Tambah'),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _StatsTab extends StatelessWidget {

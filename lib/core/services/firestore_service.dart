@@ -32,17 +32,55 @@ class FirestoreService {
 
   /// Returns sorted distinct classId values from all student accounts.
   Future<List<String>> getClasses() async {
-    final snapshot = await _db
+    // Prefer dedicated classes collection; fall back to student classIds
+    final snap = await _db
+        .collection(FirebaseConstants.classesCollection)
+        .get();
+    if (snap.docs.isNotEmpty) {
+      final ids = snap.docs
+          .map((d) => d.data()['classId'] as String? ?? d.id)
+          .where((id) => id.isNotEmpty)
+          .toList()
+        ..sort();
+      return ids;
+    }
+    // Fallback: derive from student records
+    final users = await _db
         .collection(FirebaseConstants.usersCollection)
         .where('role', isEqualTo: 'SISWA')
         .get();
-    final ids = snapshot.docs
+    final ids = users.docs
         .map((d) => d.data()['classId'] as String? ?? '')
         .where((id) => id.isNotEmpty)
         .toSet()
         .toList()
       ..sort();
     return ids;
+  }
+
+  Stream<List<Map<String, dynamic>>> getClassesStream() {
+    return _db
+        .collection(FirebaseConstants.classesCollection)
+        .snapshots()
+        .map((s) => s.docs
+            .map((d) => {'id': d.id, ...d.data()})
+            .toList()
+          ..sort((a, b) =>
+              (a['classId'] as String).compareTo(b['classId'] as String)));
+  }
+
+  Future<void> addClass(String classId, String className) async {
+    await _db
+        .collection(FirebaseConstants.classesCollection)
+        .doc(classId)
+        .set({'classId': classId, 'className': className, 'createdAt': DateTime.now().toIso8601String()});
+  }
+
+  Future<void> deleteClass(String classId) async {
+    await _db
+        .collection(FirebaseConstants.classesCollection)
+        .doc(classId)
+        .delete();
   }
 
   Future<UserModel?> getUser(String uid) async {

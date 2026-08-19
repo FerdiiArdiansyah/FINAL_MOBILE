@@ -11,8 +11,7 @@ class CreateAssignmentPage extends StatefulWidget {
   const CreateAssignmentPage({super.key});
 
   @override
-  State<CreateAssignmentPage> createState() =>
-      _CreateAssignmentPageState();
+  State<CreateAssignmentPage> createState() => _CreateAssignmentPageState();
 }
 
 class _CreateAssignmentPageState extends State<CreateAssignmentPage> {
@@ -21,8 +20,7 @@ class _CreateAssignmentPageState extends State<CreateAssignmentPage> {
   final _descController = TextEditingController();
   final _subjectController = TextEditingController();
   final _classController = TextEditingController();
-  final _maxScoreController =
-      TextEditingController(text: '100');
+  final _maxScoreController = TextEditingController(text: '100');
   String _selectedType = 'tugas';
   String? _selectedClassId;
   DateTime _deadline = DateTime.now().add(const Duration(days: 7));
@@ -52,8 +50,8 @@ class _CreateAssignmentPageState extends State<CreateAssignmentPage> {
     );
     if (time == null) return;
     setState(() {
-      _deadline = DateTime(
-          date.year, date.month, date.day, time.hour, time.minute);
+      _deadline =
+          DateTime(date.year, date.month, date.day, time.hour, time.minute);
     });
   }
 
@@ -83,7 +81,8 @@ class _CreateAssignmentPageState extends State<CreateAssignmentPage> {
         NotificationModel(
           id: '',
           title: 'Tugas Baru: ${_titleController.text}',
-          body: '${user.name} membuat tugas baru untuk kelas ${_selectedClassId ?? ""}',
+          body:
+              '${user.name} membuat tugas baru untuk kelas ${_selectedClassId ?? ""}',
           type: 'assignment',
           targetUserId: 'ALL',
           targetClassId: _selectedClassId ?? '',
@@ -133,8 +132,7 @@ class _CreateAssignmentPageState extends State<CreateAssignmentPage> {
                       label: 'Tugas',
                       icon: Icons.assignment_outlined,
                       selected: _selectedType == 'tugas',
-                      onTap: () =>
-                          setState(() => _selectedType = 'tugas'),
+                      onTap: () => setState(() => _selectedType = 'tugas'),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -143,8 +141,7 @@ class _CreateAssignmentPageState extends State<CreateAssignmentPage> {
                       label: 'Kuis',
                       icon: Icons.quiz_outlined,
                       selected: _selectedType == 'kuis',
-                      onTap: () =>
-                          setState(() => _selectedType = 'kuis'),
+                      onTap: () => setState(() => _selectedType = 'kuis'),
                     ),
                   ),
                 ],
@@ -161,8 +158,7 @@ class _CreateAssignmentPageState extends State<CreateAssignmentPage> {
                 controller: _subjectController,
                 decoration:
                     const InputDecoration(labelText: 'Mata Pelajaran *'),
-                validator: (v) =>
-                    v?.isEmpty == true ? 'Wajib diisi' : null,
+                validator: (v) => v?.isEmpty == true ? 'Wajib diisi' : null,
               ),
               const SizedBox(height: 12),
               ClassDropdown(
@@ -173,8 +169,7 @@ class _CreateAssignmentPageState extends State<CreateAssignmentPage> {
               TextFormField(
                 controller: _maxScoreController,
                 keyboardType: TextInputType.number,
-                decoration:
-                    const InputDecoration(labelText: 'Nilai Maksimum'),
+                decoration: const InputDecoration(labelText: 'Nilai Maksimum'),
               ),
               const SizedBox(height: 12),
               // Deadline picker
@@ -255,8 +250,7 @@ class _TypeButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon,
-                color: selected ? Colors.white : Colors.grey),
+            Icon(icon, color: selected ? Colors.white : Colors.grey),
             const SizedBox(width: 8),
             Text(
               label,
