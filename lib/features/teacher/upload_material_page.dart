@@ -181,7 +181,7 @@ class _UploadMaterialPageState extends State<UploadMaterialPage> {
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
-                value: _selectedType,
+                initialValue: _selectedType,
                 decoration: const InputDecoration(labelText: 'Tipe Materi'),
                 items: ['pdf', 'video', 'link']
                     .map((t) => DropdownMenuItem(
@@ -230,7 +230,7 @@ class _UploadMaterialPageState extends State<UploadMaterialPage> {
                   label: Text(
                     _pickedFile == null
                         ? 'Pilih File ${_selectedType.toUpperCase()} dari Perangkat'
-                        : '${_pickedFile!.name}',
+                        : _pickedFile!.name,
                     overflow: TextOverflow.ellipsis,
                   ),
                   style: OutlinedButton.styleFrom(

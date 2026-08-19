@@ -55,8 +55,9 @@ class _GradeCard extends StatelessWidget {
           final score = submission?.score;
           Color scoreColor = Colors.grey;
           if (score != null) {
-            if (score >= 80) scoreColor = AppTheme.successColor;
-            else if (score >= 60) scoreColor = AppTheme.warningColor;
+            if (score >= 80) {
+              scoreColor = AppTheme.successColor;
+            } else if (score >= 60) scoreColor = AppTheme.warningColor;
             else scoreColor = AppTheme.errorColor;
           }
           return ListTile(
@@ -64,7 +65,7 @@ class _GradeCard extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: scoreColor.withOpacity(0.1),
+                color: scoreColor.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Center(

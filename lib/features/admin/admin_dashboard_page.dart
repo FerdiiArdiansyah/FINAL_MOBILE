@@ -160,7 +160,7 @@ class _UsersTab extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
-                  value: selectedRole,
+                  initialValue: selectedRole,
                   decoration: const InputDecoration(labelText: 'Role'),
                   items: AppRoles.all
                       .map((r) => DropdownMenuItem(
@@ -475,7 +475,7 @@ class _ContentTabState extends State<_ContentTab>
                 ),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
-                  value: type,
+                  initialValue: type,
                   decoration: const InputDecoration(labelText: 'Tipe'),
                   items: ['pdf', 'video', 'link']
                       .map((t) => DropdownMenuItem(

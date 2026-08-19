@@ -209,9 +209,9 @@ class _SchedulePageState extends State<SchedulePage>
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
+                        const Text(
                           'Jadwal Piket Kelas',
-                          style: const TextStyle(
+                          style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.bold),
@@ -229,8 +229,8 @@ class _SchedulePageState extends State<SchedulePage>
             ),
           ),
           const SizedBox(height: 16),
-          Text('Jadwal Piket Bulan Ini',
-              style: TextStyle(
+          const Text('Jadwal Piket Bulan Ini',
+              style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                   color: AppTheme.primaryColor)),

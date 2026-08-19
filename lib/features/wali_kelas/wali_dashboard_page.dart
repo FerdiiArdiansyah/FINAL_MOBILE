@@ -44,8 +44,7 @@ class WaliDashboardPage extends StatelessWidget {
                   children: [
                     const CircleAvatar(
                       backgroundColor: Colors.white,
-                      child:
-                          Icon(Icons.person, color: AppTheme.primaryColor),
+                      child: Icon(Icons.person, color: AppTheme.primaryColor),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -90,8 +89,7 @@ class WaliDashboardPage extends StatelessWidget {
             const SizedBox(height: 16),
 
             // Quick Actions
-            Text('Menu',
-                style: Theme.of(context).textTheme.titleMedium),
+            Text('Menu', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -109,8 +107,7 @@ class WaliDashboardPage extends StatelessWidget {
                     icon: Icons.warning_amber_outlined,
                     label: 'Pelanggaran',
                     color: Colors.red,
-                    onTap: () => context
-                        .push('/violations/${user.classId ?? ""}'),
+                    onTap: () => context.push('/wali-kelas/monitoring'),
                   ),
                 ),
               ],
@@ -176,19 +173,24 @@ class WaliDashboardPage extends StatelessWidget {
                         child: ListTile(
                           dense: true,
                           leading: Icon(
-                            a.type == 'kuis' ? Icons.quiz_outlined : Icons.assignment_outlined,
+                            a.type == 'kuis'
+                                ? Icons.quiz_outlined
+                                : Icons.assignment_outlined,
                             color: a.isExpired ? Colors.red : Colors.orange,
                             size: 20,
                           ),
                           title: Text(a.title,
-                              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                              style: const TextStyle(
+                                  fontSize: 13, fontWeight: FontWeight.w600)),
                           subtitle: Text('${a.subject} • ${a.teacherName}'),
                           trailing: Chip(
                             label: Text(
                               a.isExpired ? 'Tutup' : 'Aktif',
-                              style: const TextStyle(color: Colors.white, fontSize: 10),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 10),
                             ),
-                            backgroundColor: a.isExpired ? Colors.red : Colors.green,
+                            backgroundColor:
+                                a.isExpired ? Colors.red : Colors.green,
                             padding: EdgeInsets.zero,
                           ),
                         ),
@@ -225,12 +227,15 @@ class WaliDashboardPage extends StatelessWidget {
                         child: ListTile(
                           dense: true,
                           leading: Icon(
-                            m.type == 'video' ? Icons.play_circle_outline : Icons.picture_as_pdf,
+                            m.type == 'video'
+                                ? Icons.play_circle_outline
+                                : Icons.picture_as_pdf,
                             color: Colors.blue,
                             size: 20,
                           ),
                           title: Text(m.title,
-                              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                              style: const TextStyle(
+                                  fontSize: 13, fontWeight: FontWeight.w600)),
                           subtitle: Text('${m.subject} • ${m.teacherName}'),
                         ),
                       );
@@ -254,8 +259,7 @@ class WaliDashboardPage extends StatelessWidget {
                 stream: db.getStudentsByClass(user.classId!),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return const Center(
-                        child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
                   final students = snapshot.data!;
                   if (students.isEmpty) {
@@ -277,11 +281,10 @@ class WaliDashboardPage extends StatelessWidget {
                           title: Text(s.name),
                           subtitle: Text('NISN: ${s.nisn ?? "-"}'),
                           trailing: IconButton(
-                            icon: const Icon(
-                                Icons.warning_amber_outlined,
+                            icon: const Icon(Icons.warning_amber_outlined,
                                 color: Colors.orange),
-                            onPressed: () => context
-                                .push('/violations/${s.uid}'),
+                            onPressed: () =>
+                                context.push('/violations/${s.uid}'),
                           ),
                         ),
                       );
@@ -366,7 +369,7 @@ class _ActionCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: color, size: 22),

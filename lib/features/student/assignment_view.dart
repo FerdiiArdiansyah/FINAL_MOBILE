@@ -122,8 +122,8 @@ class _AssignmentCard extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: assignment.isExpired
-                ? Colors.red.withOpacity(0.1)
-                : Colors.orange.withOpacity(0.1),
+                ? Colors.red.withValues(alpha: 0.1)
+                : Colors.orange.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(

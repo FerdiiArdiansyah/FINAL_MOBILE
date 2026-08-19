@@ -81,7 +81,7 @@ class AttendancePage extends StatelessWidget {
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
                                   color: _statusColor(a.status)
-                                      .withOpacity(0.1),
+                                      .withValues(alpha: 0.1),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(

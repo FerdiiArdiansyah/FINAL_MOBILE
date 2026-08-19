@@ -40,8 +40,8 @@ class BkDashboardPage extends StatelessWidget {
                   children: [
                     const CircleAvatar(
                       backgroundColor: Colors.white,
-                      child: Icon(Icons.psychology,
-                          color: AppTheme.primaryColor),
+                      child:
+                          Icon(Icons.psychology, color: AppTheme.primaryColor),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -127,16 +127,15 @@ class BkDashboardPage extends StatelessWidget {
               stream: db.getCounselingCases(status: 'pending'),
               builder: (context, snap) {
                 if (!snap.hasData) {
-                  return const Center(
-                      child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 final pending = snap.data!;
                 if (pending.isEmpty) {
                   return const Card(
                     child: Padding(
                       padding: EdgeInsets.all(16),
-                      child: Center(
-                          child: Text('Tidak ada permohonan pending')),
+                      child:
+                          Center(child: Text('Tidak ada permohonan pending')),
                     ),
                   );
                 }
@@ -174,9 +173,7 @@ class _StatCard extends StatelessWidget {
           children: [
             Text(count.toString(),
                 style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: color)),
+                    fontSize: 28, fontWeight: FontWeight.bold, color: color)),
             Text(label,
                 style: const TextStyle(fontSize: 12, color: Colors.grey)),
           ],
@@ -212,7 +209,7 @@ class _ActionCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: color, size: 22),
@@ -220,8 +217,7 @@ class _ActionCard extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(label,
-                    style:
-                        const TextStyle(fontWeight: FontWeight.w600)),
+                    style: const TextStyle(fontWeight: FontWeight.w600)),
               ),
             ],
           ),
@@ -250,11 +246,10 @@ class _CounselingCard extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.orange.withOpacity(0.1),
+            color: Colors.orange.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
-          child: const Icon(Icons.psychology_outlined,
-              color: Colors.orange),
+          child: const Icon(Icons.psychology_outlined, color: Colors.orange),
         ),
         title: Text(counseling.studentName,
             style: const TextStyle(fontWeight: FontWeight.w600)),
@@ -262,20 +257,21 @@ class _CounselingCard extends StatelessWidget {
             Text('${counseling.category} • ${_fmt(counseling.createdAt)}'),
         trailing: PopupMenuButton<String>(
           onSelected: (v) async {
-            final db = FirestoreService();
-            await db.updateCounselingStatus(
-              counseling.id,
-              v,
-              notes: v == 'ongoing' ? 'Ditangani oleh $bkName' : null,
-            );
+            if (v == 'scheduled') {
+              _showScheduleDateDialog(context, counseling, bkName);
+            } else {
+              final db = FirestoreService();
+              await db.updateCounselingStatus(
+                counseling.id,
+                v,
+                notes: v == 'ongoing' ? 'Ditangani oleh $bkName' : null,
+              );
+            }
           },
           itemBuilder: (_) => [
-            const PopupMenuItem(
-                value: 'scheduled', child: Text('Jadwalkan')),
-            const PopupMenuItem(
-                value: 'ongoing', child: Text('Tangani')),
-            const PopupMenuItem(
-                value: 'resolved', child: Text('Selesai')),
+            const PopupMenuItem(value: 'scheduled', child: Text('Jadwalkan')),
+            const PopupMenuItem(value: 'ongoing', child: Text('Tangani')),
+            const PopupMenuItem(value: 'resolved', child: Text('Selesai')),
           ],
           child: const Icon(Icons.more_vert),
         ),
@@ -284,4 +280,71 @@ class _CounselingCard extends StatelessWidget {
   }
 
   String _fmt(DateTime d) => '${d.day}/${d.month}/${d.year}';
+
+  void _showScheduleDateDialog(
+      BuildContext context, CounselingModel counseling, String bkName) {
+    DateTime selected = DateTime.now().add(const Duration(hours: 1));
+    showDialog(
+      context: context,
+      builder: (_) => StatefulBuilder(
+        builder: (ctx, setState) => AlertDialog(
+          title: Text('Jadwalkan — ${counseling.studentName}'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.calendar_today,
+                    color: AppTheme.primaryColor),
+                title: Text(
+                    '${selected.day}/${selected.month}/${selected.year} '
+                    '${selected.hour.toString().padLeft(2, "0")}:'
+                    '${selected.minute.toString().padLeft(2, "0")}',
+                    style: const TextStyle(fontWeight: FontWeight.w600)),
+                onTap: () async {
+                  final date = await showDatePicker(
+                    context: ctx,
+                    initialDate: selected,
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime.now().add(const Duration(days: 90)),
+                  );
+                  if (date != null && ctx.mounted) {
+                    final time = await showTimePicker(
+                      context: ctx,
+                      initialTime: TimeOfDay.fromDateTime(selected),
+                    );
+                    if (time != null) {
+                      setState(() => selected = DateTime(date.year, date.month,
+                          date.day, time.hour, time.minute));
+                    }
+                  }
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Batal'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final db = FirestoreService();
+                await db.updateCounselingStatus(
+                  counseling.id,
+                  'scheduled',
+                  scheduledAt: selected,
+                  notes: 'Dijadwalkan oleh $bkName',
+                );
+                if (ctx.mounted) {
+                  Navigator.pop(ctx);
+                }
+              },
+              child: const Text('Konfirmasi'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

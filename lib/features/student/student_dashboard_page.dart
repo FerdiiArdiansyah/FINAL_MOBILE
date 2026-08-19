@@ -45,8 +45,7 @@ class StudentDashboardPage extends StatelessWidget {
                     children: [
                       const CircleAvatar(
                         backgroundColor: Colors.white,
-                        child: Icon(Icons.person,
-                            color: AppTheme.primaryColor),
+                        child: Icon(Icons.person, color: AppTheme.primaryColor),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -128,7 +127,7 @@ class StudentDashboardPage extends StatelessWidget {
                     icon: Icons.chat_outlined,
                     label: 'Chat Guru',
                     color: Colors.indigo,
-                    onTap: () => context.push('/notifications'),
+                    onTap: () => context.push('/chat-list'),
                   ),
                   _MenuCard(
                     icon: Icons.forum_outlined,
@@ -146,8 +145,7 @@ class StudentDashboardPage extends StatelessWidget {
                     icon: Icons.warning_amber_outlined,
                     label: 'Pelanggaran',
                     color: Colors.deepOrange,
-                    onTap: () =>
-                        context.push('/violations/${user.uid}'),
+                    onTap: () => context.push('/violations/${user.uid}'),
                   ),
                 ],
               ),
@@ -160,8 +158,7 @@ class StudentDashboardPage extends StatelessWidget {
                   Text('Tugas Terbaru',
                       style: Theme.of(context).textTheme.titleMedium),
                   TextButton(
-                    onPressed: () =>
-                        context.push('/student/assignments'),
+                    onPressed: () => context.push('/student/assignments'),
                     child: const Text('Lihat Semua'),
                   ),
                 ],
@@ -194,8 +191,7 @@ class StudentDashboardPage extends StatelessWidget {
                   Text('Materi Terbaru',
                       style: Theme.of(context).textTheme.titleMedium),
                   TextButton(
-                    onPressed: () =>
-                        context.push('/student/materials'),
+                    onPressed: () => context.push('/student/materials'),
                     child: const Text('Lihat Semua'),
                   ),
                 ],
@@ -258,7 +254,7 @@ class _MenuCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: color, size: 28),
@@ -290,8 +286,8 @@ class _AssignmentCard extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: isExpired
-                ? Colors.red.withOpacity(0.1)
-                : Colors.orange.withOpacity(0.1),
+                ? Colors.red.withValues(alpha: 0.1)
+                : Colors.orange.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
@@ -332,7 +328,7 @@ class _MaterialCard extends StatelessWidget {
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.1),
+            color: Colors.blue.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
@@ -344,8 +340,7 @@ class _MaterialCard extends StatelessWidget {
         ),
         title: Text(material.title,
             style: const TextStyle(fontWeight: FontWeight.w600)),
-        subtitle:
-            Text('${material.subject} • ${material.teacherName}'),
+        subtitle: Text('${material.subject} • ${material.teacherName}'),
         trailing: const Icon(Icons.arrow_forward_ios, size: 14),
       ),
     );
@@ -361,8 +356,7 @@ class _EmptyState extends StatelessWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Text(message,
-            style: const TextStyle(color: Colors.grey)),
+        child: Text(message, style: const TextStyle(color: Colors.grey)),
       ),
     );
   }
@@ -401,9 +395,8 @@ class _BookBKSheetState extends State<_BookBKSheet> {
               style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(
-            value: _selectedCategory,
-            decoration:
-                const InputDecoration(labelText: 'Kategori Masalah'),
+            initialValue: _selectedCategory,
+            decoration: const InputDecoration(labelText: 'Kategori Masalah'),
             items: _categories
                 .map((c) => DropdownMenuItem(value: c, child: Text(c)))
                 .toList(),
@@ -443,7 +436,8 @@ class _BookBKSheetState extends State<_BookBKSheet> {
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('Permohonan konseling berhasil dikirim'),
+                            content:
+                                Text('Permohonan konseling berhasil dikirim'),
                             backgroundColor: AppTheme.successColor,
                           ),
                         );

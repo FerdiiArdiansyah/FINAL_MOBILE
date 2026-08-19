@@ -20,18 +20,14 @@ class FirestoreService {
         .where('classId', isEqualTo: classId)
         .where('role', isEqualTo: 'SISWA')
         .snapshots()
-        .map((s) => s.docs
-            .map((d) => UserModel.fromMap(d.data(), d.id))
-            .toList());
+        .map((s) =>
+            s.docs.map((d) => UserModel.fromMap(d.data(), d.id)).toList());
   }
 
   Future<List<UserModel>> getAllUsers() async {
-    final snapshot = await _db
-        .collection(FirebaseConstants.usersCollection)
-        .get();
-    return snapshot.docs
-        .map((d) => UserModel.fromMap(d.data(), d.id))
-        .toList();
+    final snapshot =
+        await _db.collection(FirebaseConstants.usersCollection).get();
+    return snapshot.docs.map((d) => UserModel.fromMap(d.data(), d.id)).toList();
   }
 
   Future<void> updateUser(String uid, Map<String, dynamic> data) async {
@@ -48,12 +44,8 @@ class FirestoreService {
         _db.collection(FirebaseConstants.materialsCollection);
     if (classId != null) query = query.where('classId', isEqualTo: classId);
     if (subject != null) query = query.where('subject', isEqualTo: subject);
-    return query
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((s) => s.docs
-            .map((d) => MaterialModel.fromMap(d.data(), d.id))
-            .toList());
+    return query.orderBy('createdAt', descending: true).snapshots().map((s) =>
+        s.docs.map((d) => MaterialModel.fromMap(d.data(), d.id)).toList());
   }
 
   Future<String> addMaterial(MaterialModel material) async {
@@ -82,12 +74,8 @@ class FirestoreService {
     if (teacherId != null) {
       query = query.where('teacherId', isEqualTo: teacherId);
     }
-    return query
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((s) => s.docs
-            .map((d) => AssignmentModel.fromMap(d.data(), d.id))
-            .toList());
+    return query.orderBy('createdAt', descending: true).snapshots().map((s) =>
+        s.docs.map((d) => AssignmentModel.fromMap(d.data(), d.id)).toList());
   }
 
   Future<String> addAssignment(AssignmentModel assignment) async {
@@ -130,10 +118,7 @@ class FirestoreService {
             .toList());
   }
 
-  Future<void> gradeSubmission(
-      String assignmentId,
-      String studentId,
-      int score,
+  Future<void> gradeSubmission(String assignmentId, String studentId, int score,
       String? feedback) async {
     await _db
         .collection(FirebaseConstants.assignmentsCollection)
@@ -164,25 +149,20 @@ class FirestoreService {
     await batch.commit();
   }
 
-  Stream<List<AttendanceModel>> getAttendanceByStudent(
-      String studentId, {DateTime? from, DateTime? to}) {
+  Stream<List<AttendanceModel>> getAttendanceByStudent(String studentId,
+      {DateTime? from, DateTime? to}) {
     Query<Map<String, dynamic>> query = _db
         .collection(FirebaseConstants.attendanceCollection)
         .where('studentId', isEqualTo: studentId);
     if (from != null) {
-      query = query.where('date',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(from));
+      query =
+          query.where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(from));
     }
     if (to != null) {
-      query = query.where('date',
-          isLessThanOrEqualTo: Timestamp.fromDate(to));
+      query = query.where('date', isLessThanOrEqualTo: Timestamp.fromDate(to));
     }
-    return query
-        .orderBy('date', descending: true)
-        .snapshots()
-        .map((s) => s.docs
-            .map((d) => AttendanceModel.fromMap(d.data(), d.id))
-            .toList());
+    return query.orderBy('date', descending: true).snapshots().map((s) =>
+        s.docs.map((d) => AttendanceModel.fromMap(d.data(), d.id)).toList());
   }
 
   Stream<List<AttendanceModel>> getAttendanceByClass(
@@ -192,8 +172,7 @@ class FirestoreService {
     return _db
         .collection(FirebaseConstants.attendanceCollection)
         .where('classId', isEqualTo: classId)
-        .where('date',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+        .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
         .where('date', isLessThan: Timestamp.fromDate(endOfDay))
         .snapshots()
         .map((s) => s.docs
@@ -209,9 +188,8 @@ class FirestoreService {
         .where('studentId', isEqualTo: studentId)
         .orderBy('date', descending: true)
         .snapshots()
-        .map((s) => s.docs
-            .map((d) => ViolationModel.fromMap(d.data(), d.id))
-            .toList());
+        .map((s) =>
+            s.docs.map((d) => ViolationModel.fromMap(d.data(), d.id)).toList());
   }
 
   Stream<List<ViolationModel>> getViolationsByClass(String classId) {
@@ -220,9 +198,8 @@ class FirestoreService {
         .where('classId', isEqualTo: classId)
         .orderBy('date', descending: true)
         .snapshots()
-        .map((s) => s.docs
-            .map((d) => ViolationModel.fromMap(d.data(), d.id))
-            .toList());
+        .map((s) =>
+            s.docs.map((d) => ViolationModel.fromMap(d.data(), d.id)).toList());
   }
 
   Future<String> addViolation(ViolationModel violation) async {
@@ -246,11 +223,8 @@ class FirestoreService {
         .collection(FirebaseConstants.pelanggaranCollection)
         .orderBy('date', descending: true);
     if (status != null) query = query.where('status', isEqualTo: status);
-    return query
-        .snapshots()
-        .map((s) => s.docs
-            .map((d) => ViolationModel.fromMap(d.data(), d.id))
-            .toList());
+    return query.snapshots().map((s) =>
+        s.docs.map((d) => ViolationModel.fromMap(d.data(), d.id)).toList());
   }
 
   Future<void> deleteViolation(String id) async {
@@ -274,12 +248,8 @@ class FirestoreService {
     }
     if (bkId != null) query = query.where('bkId', isEqualTo: bkId);
     if (status != null) query = query.where('status', isEqualTo: status);
-    return query
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((s) => s.docs
-            .map((d) => CounselingModel.fromMap(d.data(), d.id))
-            .toList());
+    return query.orderBy('createdAt', descending: true).snapshots().map((s) =>
+        s.docs.map((d) => CounselingModel.fromMap(d.data(), d.id)).toList());
   }
 
   Future<String> addCounseling(CounselingModel counseling) async {
@@ -289,11 +259,13 @@ class FirestoreService {
     return doc.id;
   }
 
-  Future<void> updateCounselingStatus(
-      String id, String status, {String? notes, String? resolution}) async {
+  Future<void> updateCounselingStatus(String id, String status,
+      {String? notes, String? resolution, DateTime? scheduledAt}) async {
     final data = <String, dynamic>{'status': status};
     if (notes != null) data['notes'] = notes;
     if (resolution != null) data['resolution'] = resolution;
+    if (scheduledAt != null)
+      data['scheduledAt'] = Timestamp.fromDate(scheduledAt);
     await _db
         .collection(FirebaseConstants.konselingCollection)
         .doc(id)
@@ -308,14 +280,12 @@ class FirestoreService {
         .where('participants', arrayContains: userId)
         .orderBy('lastMessageAt', descending: true)
         .snapshots()
-        .map((s) => s.docs
-            .map((d) => ChatRoomModel.fromMap(d.data(), d.id))
-            .toList());
+        .map((s) =>
+            s.docs.map((d) => ChatRoomModel.fromMap(d.data(), d.id)).toList());
   }
 
   Future<ChatRoomModel> getOrCreateChatRoom(
-      String userId1, String userId2,
-      Map<String, String> names,
+      String userId1, String userId2, Map<String, String> names,
       {String type = 'private'}) async {
     final participants = [userId1, userId2]..sort();
     final snapshot = await _db
@@ -325,8 +295,8 @@ class FirestoreService {
         .limit(1)
         .get();
     if (snapshot.docs.isNotEmpty) {
-      return ChatRoomModel.fromMap(snapshot.docs.first.data(),
-          snapshot.docs.first.id);
+      return ChatRoomModel.fromMap(
+          snapshot.docs.first.data(), snapshot.docs.first.id);
     }
     final room = ChatRoomModel(
       id: '',
@@ -352,8 +322,7 @@ class FirestoreService {
             .toList());
   }
 
-  Future<void> sendMessage(
-      String roomId, ChatMessageModel message) async {
+  Future<void> sendMessage(String roomId, ChatMessageModel message) async {
     final batch = _db.batch();
     final msgRef = _db
         .collection(FirebaseConstants.chatRoomsCollection)
@@ -361,9 +330,8 @@ class FirestoreService {
         .collection(FirebaseConstants.messagesSubCollection)
         .doc();
     batch.set(msgRef, message.toMap());
-    final roomRef = _db
-        .collection(FirebaseConstants.chatRoomsCollection)
-        .doc(roomId);
+    final roomRef =
+        _db.collection(FirebaseConstants.chatRoomsCollection).doc(roomId);
     batch.update(roomRef, {
       'lastMessage': message.content,
       'lastMessageAt': Timestamp.fromDate(message.sentAt),
@@ -404,13 +372,11 @@ class FirestoreService {
     final endOfDay = startOfDay.add(const Duration(days: 1));
     return _db
         .collection(FirebaseConstants.piketLogCollection)
-        .where('date',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+        .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
         .where('date', isLessThan: Timestamp.fromDate(endOfDay))
         .orderBy('date', descending: false)
         .snapshots()
-        .map((s) =>
-            s.docs.map((d) => {'id': d.id, ...d.data()}).toList());
+        .map((s) => s.docs.map((d) => {'id': d.id, ...d.data()}).toList());
   }
 
   // ==================== NOTIFICATIONS ====================
@@ -446,8 +412,9 @@ class FirestoreService {
     Query<Map<String, dynamic>> q =
         _db.collection('forumPosts').orderBy('createdAt', descending: true);
     if (subjectId != null) q = q.where('subjectId', isEqualTo: subjectId);
-    return q.snapshots().map((s) =>
-        s.docs.map((d) => {'id': d.id, ...d.data()}).toList());
+    return q
+        .snapshots()
+        .map((s) => s.docs.map((d) => {'id': d.id, ...d.data()}).toList());
   }
 
   Future<String> addForumPost(Map<String, dynamic> post) async {
@@ -467,14 +434,10 @@ class FirestoreService {
 
   Future<void> addForumReply(String postId, Map<String, dynamic> reply) async {
     final batch = _db.batch();
-    final replyRef = _db
-        .collection('forumPosts')
-        .doc(postId)
-        .collection('replies')
-        .doc();
+    final replyRef =
+        _db.collection('forumPosts').doc(postId).collection('replies').doc();
     batch.set(replyRef, reply);
-    batch.update(
-        _db.collection('forumPosts').doc(postId),
+    batch.update(_db.collection('forumPosts').doc(postId),
         {'replyCount': FieldValue.increment(1)});
     await batch.commit();
   }

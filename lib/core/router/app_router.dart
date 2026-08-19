@@ -30,6 +30,7 @@ import '../../features/shared/announcement_page.dart';
 import '../../features/shared/violation_page.dart';
 import '../../features/shared/forum_page.dart';
 import '../../features/shared/forum_thread_page.dart';
+import '../../features/shared/chat_list_page.dart';
 import '../../features/teacher/teacher_stats_page.dart';
 
 class AppRouter {
@@ -175,6 +176,10 @@ class AppRouter {
         ),
 
         // Shared routes
+        GoRoute(
+          path: '/chat-list',
+          builder: (_, __) => const ChatListPage(),
+        ),
         GoRoute(
           path: '/chat/:roomId',
           builder: (_, state) => ChatRoomPage(

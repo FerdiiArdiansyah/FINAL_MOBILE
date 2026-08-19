@@ -145,7 +145,7 @@ class _DailyLogPageState extends State<DailyLogPage> {
                         leading: Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: _typeColor(type).withOpacity(0.1),
+                            color: _typeColor(type).withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(_typeIcon(type),

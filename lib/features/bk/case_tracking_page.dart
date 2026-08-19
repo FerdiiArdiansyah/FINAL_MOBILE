@@ -127,7 +127,7 @@ class _CaseCard extends StatelessWidget {
                   label: Text(counseling.category,
                       style: const TextStyle(fontSize: 11)),
                   backgroundColor:
-                      AppTheme.accentColor.withOpacity(0.2),
+                      AppTheme.accentColor.withValues(alpha: 0.2),
                   padding: EdgeInsets.zero,
                 ),
                 if (counseling.scheduledAt != null)
@@ -137,7 +137,7 @@ class _CaseCard extends StatelessWidget {
                       style: const TextStyle(fontSize: 11),
                     ),
                     backgroundColor:
-                        Colors.green.withOpacity(0.2),
+                        Colors.green.withValues(alpha: 0.2),
                     padding: EdgeInsets.zero,
                   ),
               ],

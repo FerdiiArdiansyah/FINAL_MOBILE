@@ -76,14 +76,14 @@ class _NotificationCard extends StatelessWidget {
         await db.markNotificationRead(notification.id);
       },
       child: Container(
-        color: notification.isRead ? null : AppTheme.primaryColor.withOpacity(0.05),
+        color: notification.isRead ? null : AppTheme.primaryColor.withValues(alpha: 0.05),
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(
               horizontal: 16, vertical: 8),
           leading: Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: _typeColor(notification.type).withOpacity(0.1),
+              color: _typeColor(notification.type).withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(

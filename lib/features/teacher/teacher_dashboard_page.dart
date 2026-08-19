@@ -61,8 +61,8 @@ class TeacherDashboardPage extends StatelessWidget {
                           ),
                           const Text(
                             'Guru Mata Pelajaran',
-                            style: TextStyle(
-                                color: Colors.white70, fontSize: 13),
+                            style:
+                                TextStyle(color: Colors.white70, fontSize: 13),
                           ),
                         ],
                       ),
@@ -74,8 +74,7 @@ class TeacherDashboardPage extends StatelessWidget {
             const SizedBox(height: 16),
 
             // Quick Actions
-            Text('Aksi Cepat',
-                style: Theme.of(context).textTheme.titleMedium),
+            Text('Aksi Cepat', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -93,8 +92,7 @@ class TeacherDashboardPage extends StatelessWidget {
                     icon: Icons.assignment_add,
                     label: 'Buat Tugas',
                     color: Colors.orange,
-                    onTap: () =>
-                        context.push('/teacher/create-assignment'),
+                    onTap: () => context.push('/teacher/create-assignment'),
                   ),
                 ),
               ],
@@ -116,7 +114,7 @@ class TeacherDashboardPage extends StatelessWidget {
                     icon: Icons.grade,
                     label: 'Penilaian',
                     color: Colors.purple,
-                    onTap: () => context.push('/notifications'),
+                    onTap: () => _showGradingSelector(context, user.uid, db),
                   ),
                 ),
               ],
@@ -181,13 +179,11 @@ class TeacherDashboardPage extends StatelessWidget {
               stream: db.getAssignments(teacherId: user.uid),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return const Center(
-                      child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 final assignments = snapshot.data!;
                 if (assignments.isEmpty) {
-                  return const _EmptyCard(
-                      message: 'Belum ada tugas dibuat');
+                  return const _EmptyCard(message: 'Belum ada tugas dibuat');
                 }
                 return Column(
                   children: assignments.take(5).map((a) {
@@ -205,8 +201,8 @@ class TeacherDashboardPage extends StatelessWidget {
                             '${a.subject} • Deadline: ${_fmt(a.deadline)}'),
                         trailing: IconButton(
                           icon: const Icon(Icons.people_outlined),
-                          onPressed: () => context
-                              .push('/teacher/grading/${a.id}'),
+                          onPressed: () =>
+                              context.push('/teacher/grading/${a.id}'),
                         ),
                       ),
                     );
@@ -217,23 +213,20 @@ class TeacherDashboardPage extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Materials
-            Text('Materi Saya',
-                style: Theme.of(context).textTheme.titleMedium),
+            Text('Materi Saya', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             StreamBuilder<List<MaterialModel>>(
               stream: db.getMaterials(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return const Center(
-                      child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
                 final materials = snapshot.data!
                     .where((m) => m.teacherId == user.uid)
                     .take(3)
                     .toList();
                 if (materials.isEmpty) {
-                  return const _EmptyCard(
-                      message: 'Belum ada materi diupload');
+                  return const _EmptyCard(message: 'Belum ada materi diupload');
                 }
                 return Column(
                   children: materials.map((m) {
@@ -247,13 +240,11 @@ class TeacherDashboardPage extends StatelessWidget {
                           color: Colors.blue,
                         ),
                         title: Text(m.title),
-                        subtitle:
-                            Text('${m.subject} • ${m.classId}'),
+                        subtitle: Text('${m.subject} • ${m.classId}'),
                         trailing: IconButton(
                           icon: const Icon(Icons.delete_outline,
                               color: Colors.red),
-                          onPressed: () =>
-                              _confirmDelete(context, db, m.id),
+                          onPressed: () => _confirmDelete(context, db, m.id),
                         ),
                       ),
                     );
@@ -267,14 +258,82 @@ class TeacherDashboardPage extends StatelessWidget {
     );
   }
 
+  void _showGradingSelector(
+      BuildContext context, String teacherId, FirestoreService db) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) => DraggableScrollableSheet(
+        initialChildSize: 0.6,
+        minChildSize: 0.4,
+        maxChildSize: 0.9,
+        expand: false,
+        builder: (ctx, scrollCtrl) => Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text('Pilih Tugas untuk Dinilai',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+            const Divider(height: 1),
+            Expanded(
+              child: StreamBuilder<List<AssignmentModel>>(
+                stream: db.getAssignments(teacherId: teacherId),
+                builder: (context, snap) {
+                  if (!snap.hasData) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  final assignments = snap.data!;
+                  if (assignments.isEmpty) {
+                    return const Center(
+                      child: Text('Belum ada tugas',
+                          style: TextStyle(color: Colors.grey)),
+                    );
+                  }
+                  return ListView.builder(
+                    controller: scrollCtrl,
+                    itemCount: assignments.length,
+                    itemBuilder: (context, i) {
+                      final a = assignments[i];
+                      return ListTile(
+                        leading: Icon(
+                          a.type == 'kuis'
+                              ? Icons.quiz_outlined
+                              : Icons.assignment_outlined,
+                          color: a.isExpired ? Colors.red : Colors.orange,
+                        ),
+                        title: Text(a.title,
+                            style:
+                                const TextStyle(fontWeight: FontWeight.w600)),
+                        subtitle: Text(
+                            '${a.subject} • Kelas ${a.classId} • Deadline: ${_fmt(a.deadline)}'),
+                        trailing: const Icon(Icons.chevron_right),
+                        onTap: () {
+                          Navigator.pop(context);
+                          context.push('/teacher/grading/${a.id}');
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Future<void> _confirmDelete(
       BuildContext context, FirestoreService db, String id) async {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
         title: const Text('Hapus Materi'),
-        content:
-            const Text('Apakah Anda yakin ingin menghapus materi ini?'),
+        content: const Text('Apakah Anda yakin ingin menghapus materi ini?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -282,8 +341,7 @@ class TeacherDashboardPage extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Hapus'),
           ),
         ],
@@ -325,7 +383,8 @@ class TeacherDashboardPage extends StatelessWidget {
                       child: TextField(
                         controller: nisnCtrl,
                         keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(labelText: 'NISN Siswa'),
+                        decoration:
+                            const InputDecoration(labelText: 'NISN Siswa'),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -333,9 +392,13 @@ class TeacherDashboardPage extends StatelessWidget {
                       onPressed: () async {
                         final db = FirestoreService();
                         final users = await db.getAllUsers();
-                        final match = users.where((u) =>
-                            u.nisn == nisnCtrl.text.trim() ||
-                            u.name.toLowerCase().contains(nisnCtrl.text.toLowerCase())).toList();
+                        final match = users
+                            .where((u) =>
+                                u.nisn == nisnCtrl.text.trim() ||
+                                u.name
+                                    .toLowerCase()
+                                    .contains(nisnCtrl.text.toLowerCase()))
+                            .toList();
                         if (match.isNotEmpty) {
                           setState(() {
                             foundStudent = match.first;
@@ -344,7 +407,8 @@ class TeacherDashboardPage extends StatelessWidget {
                         } else {
                           if (ctx.mounted) {
                             ScaffoldMessenger.of(ctx).showSnackBar(
-                              const SnackBar(content: Text('Siswa tidak ditemukan')),
+                              const SnackBar(
+                                  content: Text('Siswa tidak ditemukan')),
                             );
                           }
                         }
@@ -358,12 +422,13 @@ class TeacherDashboardPage extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 6),
                     child: Text(
                       'Ditemukan: ${foundStudent!.name} — Kelas ${foundStudent!.className ?? "-"}',
-                      style: const TextStyle(color: AppTheme.successColor, fontSize: 12),
+                      style: const TextStyle(
+                          color: AppTheme.successColor, fontSize: 12),
                     ),
                   ),
                 const SizedBox(height: 8),
                 DropdownButtonFormField<String>(
-                  value: category,
+                  initialValue: category,
                   decoration: const InputDecoration(labelText: 'Kategori'),
                   items: ['ringan', 'sedang', 'berat']
                       .map((c) => DropdownMenuItem(
@@ -374,9 +439,12 @@ class TeacherDashboardPage extends StatelessWidget {
                   onChanged: (v) {
                     setState(() {
                       category = v!;
-                      if (v == 'ringan') pointsCtrl.text = '5';
-                      else if (v == 'sedang') pointsCtrl.text = '15';
-                      else pointsCtrl.text = '30';
+                      if (v == 'ringan') {
+                        pointsCtrl.text = '5';
+                      } else if (v == 'sedang')
+                        pointsCtrl.text = '15';
+                      else
+                        pointsCtrl.text = '30';
                     });
                   },
                 ),
@@ -390,7 +458,8 @@ class TeacherDashboardPage extends StatelessWidget {
                 TextField(
                   controller: descCtrl,
                   maxLines: 2,
-                  decoration: const InputDecoration(labelText: 'Deskripsi Pelanggaran *'),
+                  decoration: const InputDecoration(
+                      labelText: 'Deskripsi Pelanggaran *'),
                 ),
               ],
             ),
@@ -404,7 +473,9 @@ class TeacherDashboardPage extends StatelessWidget {
               onPressed: () async {
                 if (descCtrl.text.isEmpty || foundStudent == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Cari siswa dan isi deskripsi terlebih dahulu')),
+                    const SnackBar(
+                        content: Text(
+                            'Cari siswa dan isi deskripsi terlebih dahulu')),
                   );
                   return;
                 }
@@ -470,7 +541,7 @@ class _ActionCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
+                  color: color.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: color),
@@ -500,8 +571,7 @@ class _EmptyCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Center(
-          child: Text(message,
-              style: const TextStyle(color: Colors.grey)),
+          child: Text(message, style: const TextStyle(color: Colors.grey)),
         ),
       ),
     );

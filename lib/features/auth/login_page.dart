@@ -78,7 +78,7 @@ class _LoginPageState extends State<LoginPage> {
               // Logo
               Container(
                 padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppTheme.primaryColor,
                   shape: BoxShape.circle,
                 ),

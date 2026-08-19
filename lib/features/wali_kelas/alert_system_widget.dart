@@ -52,8 +52,8 @@ class AlertSystemWidget extends StatelessWidget {
             }
 
             if (alerts.isEmpty) {
-              return Card(
-                child: const Padding(
+              return const Card(
+                child: Padding(
                   padding: EdgeInsets.all(12),
                   child: Row(
                     children: [

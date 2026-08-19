@@ -245,12 +245,12 @@ class _TypeButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected
               ? AppTheme.primaryColor
-              : Colors.grey.withOpacity(0.1),
+              : Colors.grey.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: selected
                 ? AppTheme.primaryColor
-                : Colors.grey.withOpacity(0.3),
+                : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Row(

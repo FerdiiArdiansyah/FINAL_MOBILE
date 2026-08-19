@@ -54,9 +54,9 @@ class ViolationPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       'Total Poin Pelanggaran',
-                      style: const TextStyle(
+                      style: TextStyle(
                           color: Colors.white, fontSize: 16),
                     ),
                     Text(
@@ -73,7 +73,7 @@ class ViolationPage extends StatelessWidget {
               if (totalPoints >= 80)
                 Container(
                   padding: const EdgeInsets.all(8),
-                  color: AppTheme.errorColor.withOpacity(0.1),
+                  color: AppTheme.errorColor.withValues(alpha: 0.1),
                   child: const Row(
                     children: [
                       Icon(Icons.warning, color: AppTheme.errorColor),
@@ -135,7 +135,7 @@ class ViolationPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               DropdownButtonFormField<String>(
-                value: selectedCategory,
+                initialValue: selectedCategory,
                 decoration:
                     const InputDecoration(labelText: 'Kategori'),
                 items: ['ringan', 'sedang', 'berat']
@@ -148,8 +148,9 @@ class ViolationPage extends StatelessWidget {
                 onChanged: (v) {
                   setState(() {
                     selectedCategory = v!;
-                    if (v == 'ringan') pointsCtrl.text = '5';
-                    else if (v == 'sedang') pointsCtrl.text = '15';
+                    if (v == 'ringan') {
+                      pointsCtrl.text = '5';
+                    } else if (v == 'sedang') pointsCtrl.text = '15';
                     else pointsCtrl.text = '30';
                   });
                 },
@@ -245,7 +246,7 @@ class _ViolationCard extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: categoryColor.withOpacity(0.1),
+                    color: categoryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(

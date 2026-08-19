@@ -129,7 +129,7 @@ class _ForumPageState extends State<ForumPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 DropdownButtonFormField<String>(
-                  value: subject,
+                  initialValue: subject,
                   decoration:
                       const InputDecoration(labelText: 'Mata Pelajaran'),
                   items: _subjects
@@ -229,10 +229,10 @@ class _ForumCard extends StatelessWidget {
                   ),
                   const Spacer(),
                   if (isTeacher)
-                    Chip(
+                    const Chip(
                       label: Text(
                         'Guru',
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontSize: 10, color: Colors.white),
                       ),
                       backgroundColor: AppTheme.successColor,
