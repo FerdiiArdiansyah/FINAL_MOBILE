@@ -12,7 +12,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FCMService.initialize();
+  // FCM runs in background — don't block startup if it fails on web
+  FCMService.initialize().catchError((e) => debugPrint('FCM init: $e'));
   runApp(const EduTechApp());
 }
 
