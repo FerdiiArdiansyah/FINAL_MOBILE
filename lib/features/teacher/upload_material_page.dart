@@ -298,8 +298,7 @@ class _UploadMaterialPageState extends State<UploadMaterialPage> {
                       color: AppTheme.successColor.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                          color:
-                              AppTheme.successColor.withValues(alpha: 0.3)),
+                          color: AppTheme.successColor.withValues(alpha: 0.3)),
                     ),
                     child: Row(
                       children: [
@@ -401,18 +400,21 @@ class _ToggleBtn extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
         decoration: BoxDecoration(
-          color: selected ? AppTheme.primaryColor : Colors.grey.withValues(alpha: 0.1),
+          color: selected
+              ? AppTheme.primaryColor
+              : Colors.grey.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: selected ? AppTheme.primaryColor : Colors.grey.withValues(alpha: 0.3),
+            color: selected
+                ? AppTheme.primaryColor
+                : Colors.grey.withValues(alpha: 0.3),
           ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon,
-                size: 16,
-                color: selected ? Colors.white : Colors.grey[600]),
+                size: 16, color: selected ? Colors.white : Colors.grey[600]),
             const SizedBox(width: 6),
             Flexible(
               child: Text(

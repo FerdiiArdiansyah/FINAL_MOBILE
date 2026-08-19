@@ -21,13 +21,13 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCEAwDlJ56tRiK_S6yNhR5LBNImXH0JrAA',
-    appId: '1:307773262208:web:3653b0bf88ad33b76a9965',
-    messagingSenderId: '307773262208',
-    projectId: 'edutech-smk-app-99a83',
-    authDomain: 'edutech-smk-app-99a83.firebaseapp.com',
-    storageBucket: 'edutech-smk-app-99a83.firebasestorage.app',
-    measurementId: 'G-J95JCL7SJD',
+    apiKey: 'AIzaSyBUTC5TclPRuwYxSotHzx-9f2ato8mAeY8',
+    appId: '1:543776401221:web:9ba21e9ad5dd39c67b402c',
+    messagingSenderId: '543776401221',
+    projectId: 'edutech-smk-43b56',
+    authDomain: 'edutech-smk-43b56.firebaseapp.com',
+    storageBucket: 'edutech-smk-43b56.firebasestorage.app',
+    measurementId: 'G-EE1K1ZWX5F',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
