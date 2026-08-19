@@ -18,7 +18,7 @@ cd /d "%~dp0"
 echo  [1/2] Membangun aplikasi web...
 echo        (Proses ini 1-3 menit, harap tunggu)
 echo.
-X:\bin\flutter.bat build web --release --no-tree-shake-icons --no-wasm-dry-run
+X:\bin\flutter.bat build web --release --no-tree-shake-icons
 
 if errorlevel 1 (
     echo.
@@ -36,6 +36,9 @@ echo  ================================================
 echo.
 echo  Tekan Ctrl+C untuk menghentikan server.
 echo.
+
+:: Buka browser otomatis
+start "" "http://localhost:8080"
 
 npx serve build\web --listen 8080 --single
 

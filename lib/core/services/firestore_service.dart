@@ -52,7 +52,8 @@ class FirestoreService {
     if (classId != null) query = query.where('classId', isEqualTo: classId);
     if (subject != null) query = query.where('subject', isEqualTo: subject);
     return query.snapshots().map((s) {
-      final list = s.docs.map((d) => MaterialModel.fromMap(d.data(), d.id)).toList();
+      final list =
+          s.docs.map((d) => MaterialModel.fromMap(d.data(), d.id)).toList();
       list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       return list;
     });
@@ -85,7 +86,8 @@ class FirestoreService {
       query = query.where('teacherId', isEqualTo: teacherId);
     }
     return query.snapshots().map((s) {
-      final list = s.docs.map((d) => AssignmentModel.fromMap(d.data(), d.id)).toList();
+      final list =
+          s.docs.map((d) => AssignmentModel.fromMap(d.data(), d.id)).toList();
       list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       return list;
     });
@@ -175,7 +177,8 @@ class FirestoreService {
       query = query.where('date', isLessThanOrEqualTo: Timestamp.fromDate(to));
     }
     return query.snapshots().map((s) {
-      final list = s.docs.map((d) => AttendanceModel.fromMap(d.data(), d.id)).toList();
+      final list =
+          s.docs.map((d) => AttendanceModel.fromMap(d.data(), d.id)).toList();
       list.sort((a, b) => b.date.compareTo(a.date));
       return list;
     });
@@ -204,10 +207,11 @@ class FirestoreService {
         .where('studentId', isEqualTo: studentId)
         .snapshots()
         .map((s) {
-          final list = s.docs.map((d) => ViolationModel.fromMap(d.data(), d.id)).toList();
-          list.sort((a, b) => b.date.compareTo(a.date));
-          return list;
-        });
+      final list =
+          s.docs.map((d) => ViolationModel.fromMap(d.data(), d.id)).toList();
+      list.sort((a, b) => b.date.compareTo(a.date));
+      return list;
+    });
   }
 
   Stream<List<ViolationModel>> getViolationsByClass(String classId) {
@@ -216,10 +220,11 @@ class FirestoreService {
         .where('classId', isEqualTo: classId)
         .snapshots()
         .map((s) {
-          final list = s.docs.map((d) => ViolationModel.fromMap(d.data(), d.id)).toList();
-          list.sort((a, b) => b.date.compareTo(a.date));
-          return list;
-        });
+      final list =
+          s.docs.map((d) => ViolationModel.fromMap(d.data(), d.id)).toList();
+      list.sort((a, b) => b.date.compareTo(a.date));
+      return list;
+    });
   }
 
   Future<String> addViolation(ViolationModel violation) async {
@@ -243,7 +248,8 @@ class FirestoreService {
         _db.collection(FirebaseConstants.pelanggaranCollection);
     if (status != null) query = query.where('status', isEqualTo: status);
     return query.snapshots().map((s) {
-      final list = s.docs.map((d) => ViolationModel.fromMap(d.data(), d.id)).toList();
+      final list =
+          s.docs.map((d) => ViolationModel.fromMap(d.data(), d.id)).toList();
       list.sort((a, b) => b.date.compareTo(a.date));
       return list;
     });
@@ -271,7 +277,8 @@ class FirestoreService {
     if (bkId != null) query = query.where('bkId', isEqualTo: bkId);
     if (status != null) query = query.where('status', isEqualTo: status);
     return query.snapshots().map((s) {
-      final list = s.docs.map((d) => CounselingModel.fromMap(d.data(), d.id)).toList();
+      final list =
+          s.docs.map((d) => CounselingModel.fromMap(d.data(), d.id)).toList();
       list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       return list;
     });
@@ -305,14 +312,15 @@ class FirestoreService {
         .where('participants', arrayContains: userId)
         .snapshots()
         .map((s) {
-          final list = s.docs.map((d) => ChatRoomModel.fromMap(d.data(), d.id)).toList();
-          list.sort((a, b) {
-            final aTime = a.lastMessageAt ?? DateTime(2000);
-            final bTime = b.lastMessageAt ?? DateTime(2000);
-            return bTime.compareTo(aTime);
-          });
-          return list;
-        });
+      final list =
+          s.docs.map((d) => ChatRoomModel.fromMap(d.data(), d.id)).toList();
+      list.sort((a, b) {
+        final aTime = a.lastMessageAt ?? DateTime(2000);
+        final bTime = b.lastMessageAt ?? DateTime(2000);
+        return bTime.compareTo(aTime);
+      });
+      return list;
+    });
   }
 
   Future<ChatRoomModel> getOrCreateChatRoom(
@@ -419,7 +427,9 @@ class FirestoreService {
         .limit(50)
         .snapshots()
         .map((s) {
-          final list = s.docs.map((d) => NotificationModel.fromMap(d.data(), d.id)).toList();
+          final list = s.docs
+              .map((d) => NotificationModel.fromMap(d.data(), d.id))
+              .toList();
           list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
           return list;
         });
@@ -441,8 +451,7 @@ class FirestoreService {
   // ==================== FORUM DISKUSI ====================
 
   Stream<List<Map<String, dynamic>>> getForumPosts({String? subjectId}) {
-    Query<Map<String, dynamic>> q =
-        _db.collection('forumPosts');
+    Query<Map<String, dynamic>> q = _db.collection('forumPosts');
     if (subjectId != null) q = q.where('subjectId', isEqualTo: subjectId);
     return q.snapshots().map((s) {
       final list = s.docs.map((d) => {'id': d.id, ...d.data()}).toList();
