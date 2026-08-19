@@ -5,6 +5,15 @@ berbasis Flutter + Firebase dengan 6 role pengguna.
 
 ---
 
+## Link Penting
+
+| | |
+|---|---|
+| 🌐 **Aplikasi Web** | [https://edutech-smk-43b56.web.app](https://edutech-smk-43b56.web.app) |
+| 🎬 **Demo Video** | [https://youtu.be/mirlTMEl-d0](https://youtu.be/mirlTMEl-d0) |
+
+---
+
 ## Akun Demo (Siap Pakai)
 
 | Role | Email | Password |
