@@ -5,6 +5,7 @@ import '../../core/services/firestore_service.dart';
 import '../../core/models/user_model.dart';
 import '../../core/models/attendance_model.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/class_dropdown.dart';
 
 class AttendanceInputPage extends StatefulWidget {
   const AttendanceInputPage({super.key});
@@ -15,11 +16,11 @@ class AttendanceInputPage extends StatefulWidget {
 }
 
 class _AttendanceInputPageState extends State<AttendanceInputPage> {
-  final _classController = TextEditingController();
   final _subjectController = TextEditingController();
   final _sessionController = TextEditingController(text: '1');
   final Map<String, String> _statusMap = {};
   List<UserModel> _students = [];
+  String? _selectedClassId;
   bool _loaded = false;
   bool _saving = false;
 
@@ -30,7 +31,7 @@ class _AttendanceInputPageState extends State<AttendanceInputPage> {
         .then((list) => list
             .where((u) =>
                 u.role == 'SISWA' &&
-                u.classId == _classController.text.trim())
+                u.classId == (_selectedClassId ?? ''))
             .toList());
     setState(() {
       _students = students;
@@ -52,7 +53,7 @@ class _AttendanceInputPageState extends State<AttendanceInputPage> {
           id: '',
           studentId: s.uid,
           studentName: s.name,
-          classId: _classController.text.trim(),
+          classId: _selectedClassId ?? '',
           subject: _subjectController.text.trim(),
           teacherId: user.uid,
           status: _statusMap[s.uid] ?? 'hadir',
@@ -114,12 +115,15 @@ class _AttendanceInputPageState extends State<AttendanceInputPage> {
                 Row(
                   children: [
                     Expanded(
-                      child: TextField(
-                        controller: _classController,
-                        decoration: const InputDecoration(
-                          labelText: 'ID Kelas',
-                          hintText: 'X-TKJ-1',
-                        ),
+                      flex: 2,
+                      child: ClassDropdown(
+                        value: _selectedClassId,
+                        labelText: 'Kelas',
+                        onChanged: (v) => setState(() {
+                          _selectedClassId = v;
+                          _loaded = false;
+                          _students.clear();
+                        }),
                       ),
                     ),
                     const SizedBox(width: 8),

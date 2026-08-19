@@ -8,6 +8,7 @@ import '../../core/models/material_model.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/file_picker.dart';
 import '../../core/utils/cloudinary_uploader.dart';
+import '../../core/widgets/class_dropdown.dart';
 
 class UploadMaterialPage extends StatefulWidget {
   const UploadMaterialPage({super.key});
@@ -29,6 +30,7 @@ class _UploadMaterialPageState extends State<UploadMaterialPage> {
   // On web: use Cloudinary; on mobile: use Firebase Storage
   bool _useFileUpload = true;
   PickedFile? _pickedFile;
+  String? _selectedClassId;
   double _uploadProgress = 0;
 
   static const _typeAccept = {
@@ -124,7 +126,14 @@ class _UploadMaterialPageState extends State<UploadMaterialPage> {
       } else {
         fileUrl = _urlController.text.trim();
       }
-
+      if (_selectedClassId == null || _selectedClassId!.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Pilih kelas terlebih dahulu')),
+          );
+        }
+        return;
+      }
       final db = FirestoreService();
       await db.addMaterial(
         MaterialModel(
@@ -132,7 +141,7 @@ class _UploadMaterialPageState extends State<UploadMaterialPage> {
           title: _titleController.text.trim(),
           description: _descController.text.trim(),
           subject: _subjectController.text.trim(),
-          classId: _classController.text.trim(),
+          classId: _selectedClassId!,
           teacherId: user.uid,
           teacherName: user.name,
           type: _selectedType,
@@ -190,14 +199,9 @@ class _UploadMaterialPageState extends State<UploadMaterialPage> {
                     v?.isEmpty == true ? 'Mata pelajaran wajib diisi' : null,
               ),
               const SizedBox(height: 12),
-              TextFormField(
-                controller: _classController,
-                decoration: const InputDecoration(
-                  labelText: 'ID Kelas *',
-                  hintText: 'Contoh: X-TKJ-1',
-                ),
-                validator: (v) =>
-                    v?.isEmpty == true ? 'Kelas wajib diisi' : null,
+              ClassDropdown(
+                value: _selectedClassId,
+                onChanged: (v) => setState(() => _selectedClassId = v),
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(

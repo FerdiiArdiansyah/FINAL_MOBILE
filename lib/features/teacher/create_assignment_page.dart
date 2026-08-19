@@ -5,6 +5,7 @@ import '../../core/services/firestore_service.dart';
 import '../../core/models/assignment_model.dart';
 import '../../core/models/notification_model.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/class_dropdown.dart';
 
 class CreateAssignmentPage extends StatefulWidget {
   const CreateAssignmentPage({super.key});
@@ -23,6 +24,7 @@ class _CreateAssignmentPageState extends State<CreateAssignmentPage> {
   final _maxScoreController =
       TextEditingController(text: '100');
   String _selectedType = 'tugas';
+  String? _selectedClassId;
   DateTime _deadline = DateTime.now().add(const Duration(days: 7));
   bool _loading = false;
 
@@ -67,7 +69,7 @@ class _CreateAssignmentPageState extends State<CreateAssignmentPage> {
           title: _titleController.text.trim(),
           description: _descController.text.trim(),
           subject: _subjectController.text.trim(),
-          classId: _classController.text.trim(),
+          classId: _selectedClassId ?? '',
           teacherId: user.uid,
           teacherName: user.name,
           type: _selectedType,
@@ -81,10 +83,10 @@ class _CreateAssignmentPageState extends State<CreateAssignmentPage> {
         NotificationModel(
           id: '',
           title: 'Tugas Baru: ${_titleController.text}',
-          body: '${user.name} membuat tugas baru untuk kelas ${_classController.text}',
+          body: '${user.name} membuat tugas baru untuk kelas ${_selectedClassId ?? ""}',
           type: 'assignment',
           targetUserId: 'ALL',
-          targetClassId: _classController.text.trim(),
+          targetClassId: _selectedClassId ?? '',
           relatedId: assignmentId,
           createdAt: DateTime.now(),
         ),
@@ -163,12 +165,9 @@ class _CreateAssignmentPageState extends State<CreateAssignmentPage> {
                     v?.isEmpty == true ? 'Wajib diisi' : null,
               ),
               const SizedBox(height: 12),
-              TextFormField(
-                controller: _classController,
-                decoration:
-                    const InputDecoration(labelText: 'ID Kelas *'),
-                validator: (v) =>
-                    v?.isEmpty == true ? 'Wajib diisi' : null,
+              ClassDropdown(
+                value: _selectedClassId,
+                onChanged: (v) => setState(() => _selectedClassId = v),
               ),
               const SizedBox(height: 12),
               TextFormField(

@@ -30,6 +30,21 @@ class FirestoreService {
     return snapshot.docs.map((d) => UserModel.fromMap(d.data(), d.id)).toList();
   }
 
+  /// Returns sorted distinct classId values from all student accounts.
+  Future<List<String>> getClasses() async {
+    final snapshot = await _db
+        .collection(FirebaseConstants.usersCollection)
+        .where('role', isEqualTo: 'SISWA')
+        .get();
+    final ids = snapshot.docs
+        .map((d) => d.data()['classId'] as String? ?? '')
+        .where((id) => id.isNotEmpty)
+        .toSet()
+        .toList()
+      ..sort();
+    return ids;
+  }
+
   Future<UserModel?> getUser(String uid) async {
     final doc =
         await _db.collection(FirebaseConstants.usersCollection).doc(uid).get();
